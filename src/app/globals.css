@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* Base surfaces — warm near-black */
+  --bg: #0D0C0A;
+  --bg-elevated: #17150F;
+  --bg-card: #1C1A14;
+  --bg-card-hover: #221F16;
+  --border: #2E2A20;
+  --border-soft: #221F17;
+
+  /* Text */
+  --text: #F6F3EA;
+  --text-dim: #9A9585;
+
+  /* Two-tone accent system — brass warming into ember, used for depth & gradients */
+  --accent: #EFB347;
+  --accent-dim: #C4842A;
+  --accent-2: #E8703D;
+  --accent-ink: #1A1204;
+
+  --warn: #EFB347;
+  --danger: #E8703D;
+  --success: #7FA87A;
+
+  /* Category colors — saturated but coherent, each does navigational work */
+  --cat-image: #5FC7B0;
+  --cat-pdf: #6C9CF0;
+  --cat-convert: #EFB347;
+  --cat-text: #C994E8;
+  --cat-extras: #E8703D;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Blueprint grid */
+.grid-texture {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  background-image:
+    linear-gradient(var(--border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 75%);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Animated gradient mesh — the hero's single orchestrated visual moment */
+.mesh-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.mesh-glow::before,
+.mesh-glow::after {
+  content: '';
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  max-width: 620px;
+  max-height: 620px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.16;
+  animation: mesh-drift 16s ease-in-out infinite;
+}
+.mesh-glow::before {
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  top: -18%;
+  left: 8%;
+}
+.mesh-glow::after {
+  background: radial-gradient(circle, var(--accent-2), transparent 70%);
+  top: -6%;
+  right: 4%;
+  animation-delay: -8s;
+  animation-duration: 19s;
+}
+@keyframes mesh-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(4%, 6%) scale(1.08); }
+  66% { transform: translate(-3%, 2%) scale(0.96); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.animate-glow {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Corner ticks — blueprint device for the logo mark */
+.corner-ticks { position: relative; }
+.corner-ticks::before,
+.corner-ticks::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--accent-dim);
+  opacity: 0.6;
+}
+.corner-ticks::before { top: -3px; left: -3px; border-right: none; border-bottom: none; }
+.corner-ticks::after { bottom: -3px; right: -3px; border-left: none; border-top: none; }
+
+/* Gradient text used once, deliberately, in the hero headline */
+.text-gradient {
+  background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Tool card — glow-on-hover treatment */
+.tool-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 0%), var(--card-glow, var(--accent)) 0%, transparent 65%);
+  transition: opacity 0.35s ease;
+}
+.tool-card:hover::before { opacity: 0.13; }
+
+/* Number-tile stat card underline sweep */
+.stat-underline {
+  position: relative;
+}
+.stat-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -1px;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.5s var(--ease-out);
+}
+.stat-underline:hover::after { width: 100%; }
