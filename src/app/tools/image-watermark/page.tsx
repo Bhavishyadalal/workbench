@@ -4,6 +4,7 @@ import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download } from "lucide-react";
 
 const tool = findTool("image-watermark")!;
@@ -16,6 +17,7 @@ const positions = [
 ];
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState("© Your name");
   const [opacity, setOpacity] = useState(60);
@@ -55,6 +57,7 @@ export default function Page() {
       ctx.strokeText(text, x, y);
       ctx.fillText(text, x, y);
       setResult(canvas.toDataURL(file.type || "image/png"));
+      push("Watermark applied", "success");
     };
     img.src = URL.createObjectURL(file);
   };
@@ -120,7 +123,7 @@ export default function Page() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={result} alt="Watermarked preview" className="max-h-72 object-contain" />
             </div>
-            <ResultBar>
+            <ResultBar celebrate>
               <a href={result} download={`watermarked-${file?.name ?? "image.png"}`}>
                 <Button variant="secondary">
                   <Download size={15} /> Download

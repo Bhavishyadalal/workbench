@@ -1,8 +1,9 @@
 "use client";
 
-import { ReactNode, useCallback, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { UploadCloud, FileCheck2, X, Inbox, type LucideIcon } from "lucide-react";
+import { useSound } from "@/lib/hooks";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -37,10 +38,14 @@ export function Button({
       "bg-[var(--bg-elevated)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--accent)]",
     ghost: "text-[var(--text-dim)] hover:text-[var(--text)]",
   };
+  const { click } = useSound();
   return (
     <button
       type={type}
-      onClick={onClick}
+      onClick={() => {
+        click();
+        onClick?.();
+      }}
       disabled={disabled}
       className={`${base} ${styles[variant]} ${className}`}
     >
@@ -170,16 +175,73 @@ export function Dropzone({
   );
 }
 
+const CONFETTI_COLORS = ["var(--accent)", "var(--accent-2)", "var(--success)", "var(--text)"];
+
+/** One-time particle burst layered on top of the success-burst glow. Fires once on mount. */
+function ConfettiBurst() {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
+  const pieces = useMemo(
+    () =>
+      Array.from({ length: 14 }, (_, i) => ({
+        id: i,
+        dx: (Math.random() - 0.5) * 180,
+        dy: -(40 + Math.random() * 70),
+        rotate: (Math.random() - 0.5) * 360,
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        delay: Math.random() * 0.06,
+      })),
+    []
+  );
+
+  if (reduced) return null;
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-visible" aria-hidden>
+      {pieces.map((p) => (
+        <motion.span
+          key={p.id}
+          initial={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
+          animate={{ opacity: 0, x: p.dx, y: p.dy, rotate: p.rotate, scale: 0.5 }}
+          transition={{ duration: 0.75, delay: p.delay, ease: "easeOut" }}
+          style={{
+            position: "absolute",
+            left: "10%",
+            top: "0%",
+            width: 6,
+            height: 6,
+            borderRadius: 2,
+            background: p.color,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function ResultBar({ children, celebrate = false }: { children: ReactNode; celebrate?: boolean }) {
+  const { chime } = useSound();
+
+  useEffect(() => {
+    if (celebrate) chime();
+    // Fire once per mount (i.e. once per completed action) — chime is stable across renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [celebrate]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 380, damping: 30 }}
-      className={`flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--border)] ${
+      className={`relative flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--border)] ${
         celebrate ? "success-burst rounded-lg" : ""
       }`}
     >
+      {celebrate && <ConfettiBurst />}
       {children}
     </motion.div>
   );

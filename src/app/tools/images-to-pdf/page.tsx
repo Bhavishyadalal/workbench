@@ -5,11 +5,13 @@ import { PDFDocument } from "pdf-lib";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2, X } from "lucide-react";
 
 const tool = findTool("images-to-pdf")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -38,6 +40,7 @@ export default function Page() {
       const bytes = await doc.save();
       const blob = new Blob([bytes as BlobPart], { type: "application/pdf" });
       setResult(URL.createObjectURL(blob));
+      push(`Built a ${files.length}-page PDF`, "success");
     } catch {
       setError("Couldn't build a PDF from those images. JPG and PNG work best.");
     } finally {
@@ -78,7 +81,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <a href={result} download="images.pdf">
               <Button variant="secondary">
                 <Download size={15} /> Download images.pdf

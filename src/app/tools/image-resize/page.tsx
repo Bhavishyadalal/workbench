@@ -4,11 +4,13 @@ import { useState, useRef } from "react";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Lock, Unlock } from "lucide-react";
 
 const tool = findTool("image-resize")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [origDims, setOrigDims] = useState<{ w: number; h: number } | null>(null);
   const [width, setWidth] = useState(0);
@@ -55,6 +57,7 @@ export default function Page() {
       if (!ctx) return;
       ctx.drawImage(img, 0, 0, width, height);
       setResult(canvas.toDataURL(file.type || "image/png"));
+      push("Image resized", "success");
     };
     img.src = URL.createObjectURL(file);
   };
@@ -113,7 +116,7 @@ export default function Page() {
         )}
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <span className="text-sm text-[var(--text-dim)]">
               {width} × {height}px
             </span>

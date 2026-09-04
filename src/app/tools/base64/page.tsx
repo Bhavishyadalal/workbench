@@ -61,10 +61,16 @@ export default function Page() {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setInput("");
+          }}
           rows={5}
           placeholder={mode === "encode" ? "Plain text…" : "Base64 text…"}
           className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm font-mono resize-y outline-none focus:border-[var(--accent)] transition-colors"
         />
+        <p className="hidden sm:block text-xs text-[var(--text-dim)] mt-1.5">
+          <kbd>Esc</kbd> to clear
+        </p>
 
         <div className="flex justify-center my-3 text-[var(--text-dim)]">
           <ArrowDownUp size={16} />

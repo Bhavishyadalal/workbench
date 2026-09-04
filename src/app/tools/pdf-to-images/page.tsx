@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
-import { Card, Button, Dropzone, ResultBar } from "@/components/ui";
+import { Card, Button, Dropzone, ResultBar, Skeleton } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2 } from "lucide-react";
 
 const tool = findTool("pdf-to-images")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [images, setImages] = useState<string[]>([]);
@@ -41,6 +43,7 @@ export default function Page() {
         urls.push(canvas.toDataURL("image/png"));
       }
       setImages(urls);
+      push(`Rendered ${urls.length} page${urls.length !== 1 ? "s" : ""}`, "success");
     } catch {
       setError("Couldn't render that PDF. Try a different file.");
     } finally {
@@ -71,9 +74,17 @@ export default function Page() {
           </Button>
         </div>
 
+        {busy && images.length === 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-[3/4] rounded-lg" />
+            ))}
+          </div>
+        )}
+
         {images.length > 0 && (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5 success-burst rounded-lg">
               {images.map((src, i) => (
                 <a
                   key={i}

@@ -5,10 +5,28 @@ import { ToastProvider } from "@/components/Toast";
 import { CommandPaletteProvider } from "@/components/CommandPalette";
 import PageTransition from "@/components/PageTransition";
 
+const title = "Workbench — Every tool you keep googling, in one place";
+const description =
+  "Compress images, merge PDFs, convert units, format JSON, and more — all in your browser, nothing uploaded.";
+
 export const metadata: Metadata = {
-  title: "Workbench — Every tool you keep googling, in one place",
-  description:
-    "Compress images, merge PDFs, convert units, format JSON, and more — all in your browser, nothing uploaded.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")
+  ),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    siteName: "Workbench",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 // Runs before paint to set the theme attribute from localStorage,

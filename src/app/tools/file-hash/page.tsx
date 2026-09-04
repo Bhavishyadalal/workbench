@@ -3,9 +3,9 @@
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
 import { useToast } from "@/components/Toast";
-import { Card, Dropzone } from "@/components/ui";
+import { Card, Dropzone, Skeleton } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
-import { Copy, Check, Loader2 } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 
 const tool = findTool("file-hash")!;
 
@@ -69,8 +69,10 @@ export default function Page() {
         />
 
         {busy && (
-          <div className="flex items-center gap-2 mt-5 text-sm text-[var(--text-dim)]">
-            <Loader2 size={15} className="animate-spin" /> Hashing…
+          <div className="flex flex-col gap-2 mt-5">
+            {algos.map(({ label }) => (
+              <Skeleton key={label} className="h-[52px]" />
+            ))}
           </div>
         )}
 

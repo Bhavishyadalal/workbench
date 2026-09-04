@@ -5,11 +5,13 @@ import { PDFDocument } from "pdf-lib";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2 } from "lucide-react";
 
 const tool = findTool("pdf-protect")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -37,6 +39,7 @@ export default function Page() {
       });
       const blob = new Blob([outBytes as BlobPart], { type: "application/pdf" });
       setResult(URL.createObjectURL(blob));
+      push("Password applied", "success");
     } catch {
       setError(
         "Couldn't apply a password to that PDF. pdf-lib's encryption support is limited — for stronger protection, use a dedicated desktop PDF tool."
@@ -88,7 +91,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <a href={result} download={`protected-${file?.name ?? "file.pdf"}`}>
               <Button variant="secondary">
                 <Download size={15} /> Download

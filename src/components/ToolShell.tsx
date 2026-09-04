@@ -36,7 +36,7 @@ export default function ToolShell({
       >
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-[var(--text-dim)] hover:text-[var(--text)] transition-colors mb-6"
+          className="no-print inline-flex items-center gap-1.5 text-sm text-[var(--text-dim)] hover:text-[var(--text)] transition-colors mb-6"
         >
           <ArrowLeft size={14} />
           All tools

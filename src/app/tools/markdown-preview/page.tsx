@@ -37,6 +37,9 @@ export default function Page() {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setText("");
+            }}
             rows={16}
             className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm font-mono outline-none focus:border-[var(--accent)] transition-colors resize-y"
           />
@@ -45,6 +48,9 @@ export default function Page() {
             dangerouslySetInnerHTML={{ __html: html }}
           />
         </div>
+        <p className="hidden sm:block text-xs text-[var(--text-dim)] mt-2">
+          <kbd>Esc</kbd> (while editing) to clear
+        </p>
         <style jsx global>{`
           .prose-preview h1, .prose-preview h2, .prose-preview h3 {
             font-family: var(--font-display);

@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 const RECENTS_KEY = "wb:recents";
 const FAVORITES_KEY = "wb:favorites";
 const THEME_KEY = "wb:theme";
+const SOUND_KEY = "wb:sound";
+const TOUR_KEY = "wb:hasSeenTour";
 const MAX_RECENTS = 5;
 
 function readJSON<T>(key: string, fallback: T): T {
@@ -72,7 +74,21 @@ export function useFavorites() {
 
   const isFavorite = useCallback((slug: string) => favorites.includes(slug), [favorites]);
 
-  return { favorites, toggle, isFavorite };
+  /** Move the favorite at `from` to index `to`, persisting the new order. */
+  const reorder = useCallback((from: number, to: number) => {
+    setFavorites((prev) => {
+      if (from === to || from < 0 || to < 0 || from >= prev.length || to >= prev.length) {
+        return prev;
+      }
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      writeJSON(FAVORITES_KEY, next);
+      return next;
+    });
+  }, []);
+
+  return { favorites, toggle, isFavorite, reorder };
 }
 
 export type Theme = "dark" | "light";
@@ -101,3 +117,69 @@ export function useTheme() {
 }
 
 export const THEME_STORAGE_KEY = THEME_KEY;
+
+/** Sound effects are OFF by default; persist the user's choice once they opt in. */
+export function useSoundPref() {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    setEnabled(readJSON<boolean>(SOUND_KEY, false));
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === SOUND_KEY) setEnabled(readJSON<boolean>(SOUND_KEY, false));
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const toggle = useCallback(() => {
+    setEnabled((prev) => {
+      const next = !prev;
+      writeJSON(SOUND_KEY, next);
+      return next;
+    });
+  }, []);
+
+  return { enabled, toggle };
+}
+
+/** True exactly once, for a visitor who has never dismissed the onboarding tour. */
+export function useFirstVisitTour() {
+  const [shouldShow, setShouldShow] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (!window.localStorage.getItem(TOUR_KEY)) setShouldShow(true);
+    } catch {
+      // storage unavailable — just skip the tour rather than crash
+    }
+  }, []);
+
+  const dismiss = useCallback(() => {
+    setShouldShow(false);
+    try {
+      window.localStorage.setItem(TOUR_KEY, "1");
+    } catch {
+      // non-critical
+    }
+  }, []);
+
+  return { shouldShow, dismiss };
+}
+
+/** Combines the sound preference with the actual players, muted by default. */
+export function useSound() {
+  const { enabled, toggle } = useSoundPref();
+
+  const click = useCallback(() => {
+    if (!enabled) return;
+    import("@/lib/sound").then((m) => m.playClick());
+  }, [enabled]);
+
+  const chime = useCallback(() => {
+    if (!enabled) return;
+    import("@/lib/sound").then((m) => m.playChime());
+  }, [enabled]);
+
+  return { enabled, toggle, click, chime };
+}

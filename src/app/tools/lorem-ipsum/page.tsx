@@ -32,6 +32,7 @@ function makeParagraph(sentences: number): string {
 
 export default function Page() {
   const { push } = useToast();
+  const [cleared, setCleared] = useState(false);
   const [paragraphs, setParagraphs] = useState(3);
   const [sentencesPer, setSentencesPer] = useState(5);
   const [seed, setSeed] = useState(0);
@@ -44,6 +45,7 @@ export default function Page() {
   }, [paragraphs, sentencesPer, seed]);
 
   const copy = async () => {
+    if (cleared) return;
     await navigator.clipboard.writeText(text);
     push("Copied to clipboard");
     setCopied(true);
@@ -60,7 +62,10 @@ export default function Page() {
               min={1}
               max={10}
               value={paragraphs}
-              onChange={(e) => setParagraphs(Number(e.target.value))}
+              onChange={(e) => {
+                setCleared(false);
+                setParagraphs(Number(e.target.value));
+              }}
               className="w-full accent-[var(--accent)]"
             />
           </Field>
@@ -70,7 +75,10 @@ export default function Page() {
               min={2}
               max={12}
               value={sentencesPer}
-              onChange={(e) => setSentencesPer(Number(e.target.value))}
+              onChange={(e) => {
+                setCleared(false);
+                setSentencesPer(Number(e.target.value));
+              }}
               className="w-full accent-[var(--accent)]"
             />
           </Field>
@@ -78,17 +86,29 @@ export default function Page() {
 
         <textarea
           readOnly
-          value={text}
+          value={cleared ? "" : text}
           rows={10}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setCleared(true);
+          }}
           className={`${inputClass} mt-5 leading-relaxed resize-y`}
         />
+        <p className="hidden sm:block text-xs text-[var(--text-dim)] mt-1.5">
+          <kbd>Esc</kbd> (while focused) to clear
+        </p>
 
         <div className="flex gap-2 mt-4">
           <Button variant="secondary" onClick={copy}>
             {copied ? <Check size={15} /> : <Copy size={15} />}
             {copied ? "Copied" : "Copy text"}
           </Button>
-          <Button variant="ghost" onClick={() => setSeed((s) => s + 1)}>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setCleared(false);
+              setSeed((s) => s + 1);
+            }}
+          >
             Regenerate
           </Button>
         </div>

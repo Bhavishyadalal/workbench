@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { tools, categoryMeta, ToolCategory, toolsByCategory, findTool } from "@/lib/tools-registry";
 import { useFavorites, useRecentTools } from "@/lib/hooks";
+import BackToTop from "@/components/BackToTop";
+import Tour from "@/components/Tour";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
 
@@ -367,7 +369,7 @@ export default function HomeClient() {
           const items = toolsByCategory(cat);
           const Icon = categoryIcon[cat];
           return (
-            <div key={cat} className="mb-12">
+            <div key={cat} className="mb-12" data-tour={cat === categories[0] ? "categories" : undefined}>
               <div className="flex items-baseline justify-between mb-4 pb-3 border-b border-[var(--border-soft)]">
                 <div className="flex items-center gap-2.5">
                   <span
@@ -407,6 +409,9 @@ export default function HomeClient() {
       <footer className="px-5 py-8 text-center text-xs text-[var(--text-dim)] border-t border-[var(--border-soft)]">
         Runs in your browser. Files never touch a server, except live currency rates.
       </footer>
+
+      <BackToTop />
+      <Tour />
     </div>
   );
 }

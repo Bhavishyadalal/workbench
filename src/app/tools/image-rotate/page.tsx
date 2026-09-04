@@ -4,11 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, RotateCcw, RotateCw, FlipHorizontal, FlipVertical } from "lucide-react";
 
 const tool = findTool("image-rotate")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [rotation, setRotation] = useState(0);
@@ -90,7 +92,11 @@ export default function Page() {
 
         {result && (
           <ResultBar>
-            <a href={result} download={`rotated-${file?.name ?? "image.png"}`}>
+            <a
+              href={result}
+              download={`rotated-${file?.name ?? "image.png"}`}
+              onClick={() => push("Downloading rotated image", "success")}
+            >
               <Button>
                 <Download size={15} /> Download
               </Button>

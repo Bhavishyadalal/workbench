@@ -308,6 +308,46 @@ body {
   transform: scale(0.96);
 }
 
+/* Global tactile press feedback for any plain <button> that hasn't already
+   opted into the .press utility (icon-only buttons, mode toggles, etc.) */
+button:not(.press):not(:disabled) {
+  transition: transform 0.15s var(--ease-out);
+}
+button:not(.press):not(:disabled):active {
+  transform: scale(0.96);
+}
+
+/* ---------------------------------------------------------- */
+/* Print styles — tool output should stay legible on paper     */
+/* ---------------------------------------------------------- */
+@media print {
+  .grid-texture,
+  .grain,
+  .mesh-glow,
+  aside,
+  nav,
+  header,
+  footer,
+  button,
+  a[href^="#"],
+  .no-print {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  * {
+    box-shadow: none !important;
+    border-color: #ccc !important;
+  }
+}
+
 /* Kbd key styling for shortcuts */
 kbd {
   font-family: var(--font-body);

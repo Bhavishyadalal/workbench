@@ -55,9 +55,15 @@ export default function Page() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setText("");
+          }}
           rows={3}
           className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm resize-y outline-none focus:border-[var(--accent)] transition-colors"
         />
+        <p className="hidden sm:block text-xs text-[var(--text-dim)] mt-1.5">
+          <kbd>Esc</kbd> to clear
+        </p>
 
         <div className="flex flex-col gap-2 mt-5">
           {Object.entries(transforms).map(([label, fn]) => {

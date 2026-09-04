@@ -5,11 +5,13 @@ import { PDFDocument } from "pdf-lib";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2 } from "lucide-react";
 
 const tool = findTool("pdf-split")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [pageCount, setPageCount] = useState(0);
   const [range, setRange] = useState("");
@@ -67,6 +69,7 @@ export default function Page() {
       const outBytes = await out.save();
       const blob = new Blob([outBytes as BlobPart], { type: "application/pdf" });
       setResult(URL.createObjectURL(blob));
+      push(`Extracted ${indices.length} page${indices.length !== 1 ? "s" : ""}`, "success");
     } catch {
       setError("Something went wrong splitting that PDF.");
     } finally {
@@ -112,7 +115,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <a href={result} download="extracted.pdf">
               <Button variant="secondary">
                 <Download size={15} /> Download extracted.pdf

@@ -5,11 +5,13 @@ import { PDFDocument, degrees } from "pdf-lib";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2, RotateCw } from "lucide-react";
 
 const tool = findTool("pdf-rotate")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [angle, setAngle] = useState(90);
   const [busy, setBusy] = useState(false);
@@ -36,6 +38,7 @@ export default function Page() {
       const outBytes = await doc.save();
       const blob = new Blob([outBytes as BlobPart], { type: "application/pdf" });
       setResult(URL.createObjectURL(blob));
+      push("PDF rotated", "success");
     } catch {
       setError("Couldn't rotate that PDF.");
     } finally {
@@ -83,7 +86,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <a href={result} download={`rotated-${file?.name ?? "file.pdf"}`}>
               <Button variant="secondary">
                 <Download size={15} /> Download

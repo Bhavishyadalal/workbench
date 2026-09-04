@@ -4,6 +4,7 @@ import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download } from "lucide-react";
 
 const tool = findTool("image-convert")!;
@@ -14,6 +15,7 @@ const formats = [
 ];
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [format, setFormat] = useState(formats[0].value);
   const [result, setResult] = useState<string | null>(null);
@@ -38,6 +40,7 @@ export default function Page() {
       }
       ctx.drawImage(img, 0, 0);
       setResult(canvas.toDataURL(format, 0.92));
+      push("Image converted", "success");
     };
     img.src = URL.createObjectURL(file);
   };
@@ -85,7 +88,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <span className="text-sm text-[var(--text-dim)]">Ready as {chosenExt.toUpperCase()}</span>
             <a href={result} download={`converted.${chosenExt}`}>
               <Button variant="secondary">

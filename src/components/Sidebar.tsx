@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Search, SquareSlash, Star, Command } from "lucide-react";
+import { Menu, X, Search, SquareSlash, Star, Command, GripVertical } from "lucide-react";
 import { tools, categoryMeta, ToolCategory } from "@/lib/tools-registry";
 import { useFavorites } from "@/lib/hooks";
 import ThemeToggle from "@/components/ThemeToggle";
+import SoundToggle from "@/components/SoundToggle";
 import { usePalette } from "@/components/CommandPalette";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
@@ -17,7 +18,8 @@ function PaletteTrigger() {
   return (
     <button
       onClick={open}
-      className="w-full flex items-center gap-2 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-md py-2 pl-3 pr-2 text-sm text-[var(--text-dim)] hover:border-[var(--accent-dim)] transition-colors"
+      data-tour="search"
+      className="press w-full flex items-center gap-2 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-md py-2 pl-3 pr-2 text-sm text-[var(--text-dim)] hover:border-[var(--accent-dim)] transition-colors"
     >
       <Search size={14} />
       <span className="flex-1 text-left">Jump to a tool…</span>
@@ -31,7 +33,9 @@ function PaletteTrigger() {
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const [query, setQuery] = useState("");
-  const { favorites, toggle, isFavorite } = useFavorites();
+  const { favorites, toggle, isFavorite, reorder } = useFavorites();
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return tools;
@@ -65,7 +69,10 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
             Workbench
           </span>
         </Link>
-        <ThemeToggle className="hidden lg:flex" />
+        <div className="hidden lg:flex items-center gap-1.5" data-tour="theme">
+          <ThemeToggle />
+          <SoundToggle />
+        </div>
       </div>
 
       <div className="px-4 pb-3 shrink-0 hidden lg:block">
@@ -73,7 +80,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       <div className="px-4 pb-3 shrink-0 lg:hidden">
-        <div className="relative">
+        <div className="relative" data-tour="search">
           <Search
             size={15}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-dim)]"
@@ -95,7 +102,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
               Favorites
             </div>
             <div className="flex flex-col gap-0.5">
-              {favoriteTools.map((tool) => {
+              {favoriteTools.map((tool, i) => {
                 const meta = categoryMeta[tool.category];
                 const href = `/tools/${tool.slug}`;
                 const active = pathname === href;
@@ -104,21 +111,41 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
                     key={tool.slug}
                     href={href}
                     onClick={onNavigate}
-                    className={`group relative flex items-center justify-between px-2.5 py-2 text-sm transition-colors border-l ${
+                    draggable
+                    onDragStart={() => setDragIndex(i)}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      if (dragIndex !== null && dragIndex !== i) setDragOverIndex(i);
+                    }}
+                    onDragLeave={() => setDragOverIndex((cur) => (cur === i ? null : cur))}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (dragIndex !== null) reorder(dragIndex, i);
+                      setDragIndex(null);
+                      setDragOverIndex(null);
+                    }}
+                    onDragEnd={() => {
+                      setDragIndex(null);
+                      setDragOverIndex(null);
+                    }}
+                    className={`press group relative flex items-center justify-between px-2.5 py-2 text-sm transition-colors border-l cursor-grab active:cursor-grabbing ${
                       active
                         ? "text-[var(--text)] bg-[var(--bg-card)]"
                         : "text-[var(--text-dim)] border-transparent hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
-                    }`}
+                    } ${dragOverIndex === i ? "outline-dashed outline-1 outline-[var(--accent)]" : ""}`}
                     style={active ? { borderLeftColor: meta.accent } : undefined}
                   >
-                    <span className="pl-1.5">{tool.name}</span>
+                    <span className="flex items-center gap-1.5 pl-1.5 min-w-0">
+                      <GripVertical size={12} className="shrink-0 text-[var(--text-dim)] opacity-0 group-hover:opacity-70 transition-opacity" />
+                      <span className="truncate">{tool.name}</span>
+                    </span>
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         toggle(tool.slug);
                       }}
                       aria-label="Remove from favorites"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5"
+                      className="press opacity-0 group-hover:opacity-100 transition-opacity p-0.5 shrink-0"
                     >
                       <Star size={12} fill="var(--accent)" className="text-[var(--accent)]" />
                     </button>
@@ -152,7 +179,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
                       key={tool.slug}
                       href={href}
                       onClick={onNavigate}
-                      className={`group relative flex items-center justify-between px-2.5 py-2 text-sm transition-colors border-l ${
+                      className={`press group relative flex items-center justify-between px-2.5 py-2 text-sm transition-colors border-l ${
                         active
                           ? "text-[var(--text)] bg-[var(--bg-card)]"
                           : "text-[var(--text-dim)] border-transparent hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
@@ -166,7 +193,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
                           toggle(tool.slug);
                         }}
                         aria-label={fav ? "Remove from favorites" : "Add to favorites"}
-                        className={`p-0.5 transition-opacity ${fav ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                        className={`press p-0.5 transition-opacity ${fav ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
                       >
                         <Star
                           size={12}
@@ -205,7 +232,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile top bar */}
-      <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
+      <div className="no-print lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="corner-ticks w-6 h-6 flex items-center justify-center border border-[var(--accent-dim)] text-[var(--accent)]">
             <SquareSlash size={13} strokeWidth={2} />
@@ -215,7 +242,10 @@ export default function Sidebar() {
           </span>
         </Link>
         <div className="flex items-center gap-1">
-          <ThemeToggle />
+          <div className="flex items-center gap-1" data-tour="theme">
+            <ThemeToggle />
+            <SoundToggle />
+          </div>
           <button
             onClick={() => setOpen(true)}
             aria-label="Open menu"
