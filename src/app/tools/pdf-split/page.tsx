@@ -80,6 +80,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="application/pdf"
+          hint="Choose which pages to extract after uploading"
           file={file}
           onClear={() => {
             setFile(null);

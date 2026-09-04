@@ -54,6 +54,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="application/pdf"
+          hint="Each page exports as a separate PNG"
           file={file}
           onClear={() => {
             setFile(null);

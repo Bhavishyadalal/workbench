@@ -2,7 +2,7 @@
 
 import { ReactNode, useCallback, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { UploadCloud, FileCheck2, X } from "lucide-react";
+import { UploadCloud, FileCheck2, X, Inbox, type LucideIcon } from "lucide-react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -30,7 +30,7 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100";
+    "press inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100";
   const styles = {
     primary: "bg-[var(--accent)] text-[var(--accent-ink)] hover:brightness-110",
     secondary:
@@ -116,9 +116,9 @@ export function Dropzone({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
       }}
-      className={`relative flex flex-col items-center justify-center text-center rounded-lg border-2 border-dashed cursor-pointer transition-colors px-6 py-10 ${
+      className={`relative flex flex-col items-center justify-center text-center rounded-lg border-2 border-dashed cursor-pointer transition-all duration-200 px-6 py-10 ${
         dragOver
-          ? "border-[var(--accent)] bg-[var(--accent)]/5"
+          ? "border-[var(--accent)] bg-[var(--accent)]/5 scale-[1.01]"
           : "border-[var(--border)] hover:border-[var(--accent-dim)]"
       }`}
     >
@@ -134,6 +134,7 @@ export function Dropzone({
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 26 }}
           className="flex items-center gap-2 text-[var(--text)]"
         >
           <FileCheck2 size={18} className="text-[var(--accent)]" />
@@ -153,7 +154,12 @@ export function Dropzone({
         </motion.div>
       ) : (
         <>
-          <UploadCloud size={28} className="text-[var(--text-dim)] mb-3" />
+          <motion.div
+            animate={{ y: dragOver ? -3 : 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <UploadCloud size={28} className="text-[var(--text-dim)] mb-3" />
+          </motion.div>
           <p className="text-sm text-[var(--text)] font-medium">
             Drop {multiple ? "files" : "a file"} here, or click to browse
           </p>
@@ -164,14 +170,41 @@ export function Dropzone({
   );
 }
 
-export function ResultBar({ children }: { children: ReactNode }) {
+export function ResultBar({ children, celebrate = false }: { children: ReactNode; celebrate?: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--border)]"
+      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+      className={`flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--border)] ${
+        celebrate ? "success-burst rounded-lg" : ""
+      }`}
     >
       {children}
     </motion.div>
+  );
+}
+
+/** Shimmering placeholder block for async tool loading states. */
+export function Skeleton({ className = "" }: { className?: string }) {
+  return <div className={`skeleton ${className}`} />;
+}
+
+/** Friendlier placeholder shown before the user has provided input, instead of a blank card. */
+export function EmptyState({
+  icon: Icon = Inbox,
+  title,
+  hint,
+}: {
+  icon?: LucideIcon;
+  title: string;
+  hint?: string;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center text-center px-6 py-10 text-[var(--text-dim)]">
+      <Icon size={26} className="mb-3 opacity-60" strokeWidth={1.5} />
+      <p className="text-sm font-medium text-[var(--text)]">{title}</p>
+      {hint && <p className="text-xs mt-1 max-w-xs">{hint}</p>}
+    </div>
   );
 }

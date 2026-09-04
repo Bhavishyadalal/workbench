@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Field, Button, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check } from "lucide-react";
@@ -30,6 +31,7 @@ function makeParagraph(sentences: number): string {
 }
 
 export default function Page() {
+  const { push } = useToast();
   const [paragraphs, setParagraphs] = useState(3);
   const [sentencesPer, setSentencesPer] = useState(5);
   const [seed, setSeed] = useState(0);
@@ -43,6 +45,7 @@ export default function Page() {
 
   const copy = async () => {
     await navigator.clipboard.writeText(text);
+    push("Copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Dropzone } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check, Loader2 } from "lucide-react";
@@ -22,6 +23,7 @@ function bufferToHex(buf: ArrayBuffer) {
 }
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [hashes, setHashes] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
@@ -47,6 +49,7 @@ export default function Page() {
 
   const copy = async (key: string, value: string) => {
     await navigator.clipboard.writeText(value);
+    push("Copied to clipboard");
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 1200);
   };

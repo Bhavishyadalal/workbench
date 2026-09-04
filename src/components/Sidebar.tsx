@@ -4,14 +4,34 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Search, SquareSlash } from "lucide-react";
+import { Menu, X, Search, SquareSlash, Star, Command } from "lucide-react";
 import { tools, categoryMeta, ToolCategory } from "@/lib/tools-registry";
+import { useFavorites } from "@/lib/hooks";
+import ThemeToggle from "@/components/ThemeToggle";
+import { usePalette } from "@/components/CommandPalette";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
+
+function PaletteTrigger() {
+  const { open } = usePalette();
+  return (
+    <button
+      onClick={open}
+      className="w-full flex items-center gap-2 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-md py-2 pl-3 pr-2 text-sm text-[var(--text-dim)] hover:border-[var(--accent-dim)] transition-colors"
+    >
+      <Search size={14} />
+      <span className="flex-1 text-left">Jump to a tool…</span>
+      <span className="hidden lg:flex items-center gap-0.5 text-[10px] text-[var(--text-dim)] border border-[var(--border)] rounded px-1.5 py-0.5">
+        <Command size={10} />K
+      </span>
+    </button>
+  );
+}
 
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const [query, setQuery] = useState("");
+  const { favorites, toggle, isFavorite } = useFavorites();
 
   const filtered = useMemo(() => {
     if (!query.trim()) return tools;
@@ -23,28 +43,36 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
     );
   }, [query]);
 
+  const favoriteTools = useMemo(
+    () => favorites.map((slug) => tools.find((t) => t.slug === slug)).filter(Boolean) as typeof tools,
+    [favorites]
+  );
+
   return (
     <div className="flex flex-col h-full">
-      <Link
-        href="/"
-        onClick={onNavigate}
-        className="flex items-center gap-2.5 px-5 pt-6 pb-4 shrink-0 group"
-      >
-        <div
-          className="corner-ticks w-7 h-7 flex items-center justify-center shrink-0 border border-[var(--accent-dim)] text-[var(--accent)] transition-transform duration-300 group-hover:scale-105"
-          style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent)" }}
-        >
-          <SquareSlash size={15} strokeWidth={2} />
-        </div>
-        <span
-          className="text-lg font-semibold tracking-tight"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          Workbench
-        </span>
-      </Link>
+      <div className="flex items-center justify-between px-5 pt-6 pb-4 shrink-0">
+        <Link href="/" onClick={onNavigate} className="flex items-center gap-2.5 group">
+          <div
+            className="corner-ticks w-7 h-7 flex items-center justify-center shrink-0 border border-[var(--accent-dim)] text-[var(--accent)] transition-transform duration-300 group-hover:scale-105"
+            style={{ background: "linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), transparent)" }}
+          >
+            <SquareSlash size={15} strokeWidth={2} />
+          </div>
+          <span
+            className="text-lg font-semibold tracking-tight"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Workbench
+          </span>
+        </Link>
+        <ThemeToggle className="hidden lg:flex" />
+      </div>
 
-      <div className="px-4 pb-3 shrink-0">
+      <div className="px-4 pb-3 shrink-0 hidden lg:block">
+        <PaletteTrigger />
+      </div>
+
+      <div className="px-4 pb-3 shrink-0 lg:hidden">
         <div className="relative">
           <Search
             size={15}
@@ -60,6 +88,47 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 pb-6">
+        {favoriteTools.length > 0 && !query.trim() && (
+          <div className="mb-4">
+            <div className="px-2 pb-1.5 text-[11px] font-medium tracking-wide flex items-center gap-1.5 text-[var(--accent)]">
+              <Star size={10} fill="var(--accent)" />
+              Favorites
+            </div>
+            <div className="flex flex-col gap-0.5">
+              {favoriteTools.map((tool) => {
+                const meta = categoryMeta[tool.category];
+                const href = `/tools/${tool.slug}`;
+                const active = pathname === href;
+                return (
+                  <Link
+                    key={tool.slug}
+                    href={href}
+                    onClick={onNavigate}
+                    className={`group relative flex items-center justify-between px-2.5 py-2 text-sm transition-colors border-l ${
+                      active
+                        ? "text-[var(--text)] bg-[var(--bg-card)]"
+                        : "text-[var(--text-dim)] border-transparent hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
+                    }`}
+                    style={active ? { borderLeftColor: meta.accent } : undefined}
+                  >
+                    <span className="pl-1.5">{tool.name}</span>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggle(tool.slug);
+                      }}
+                      aria-label="Remove from favorites"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5"
+                    >
+                      <Star size={12} fill="var(--accent)" className="text-[var(--accent)]" />
+                    </button>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {categories.map((cat) => {
           const items = filtered.filter((t) => t.category === cat);
           if (items.length === 0) return null;
@@ -77,12 +146,13 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
                 {items.map((tool) => {
                   const href = `/tools/${tool.slug}`;
                   const active = pathname === href;
+                  const fav = isFavorite(tool.slug);
                   return (
                     <Link
                       key={tool.slug}
                       href={href}
                       onClick={onNavigate}
-                      className={`relative px-2.5 py-2 text-sm transition-colors border-l ${
+                      className={`group relative flex items-center justify-between px-2.5 py-2 text-sm transition-colors border-l ${
                         active
                           ? "text-[var(--text)] bg-[var(--bg-card)]"
                           : "text-[var(--text-dim)] border-transparent hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]"
@@ -90,6 +160,20 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
                       style={active ? { borderLeftColor: meta.accent } : undefined}
                     >
                       <span className="pl-1.5">{tool.name}</span>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggle(tool.slug);
+                        }}
+                        aria-label={fav ? "Remove from favorites" : "Add to favorites"}
+                        className={`p-0.5 transition-opacity ${fav ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+                      >
+                        <Star
+                          size={12}
+                          fill={fav ? "var(--accent)" : "none"}
+                          className={fav ? "text-[var(--accent)]" : "text-[var(--text-dim)]"}
+                        />
+                      </button>
                     </Link>
                   );
                 })}
@@ -130,13 +214,16 @@ export default function Sidebar() {
             Workbench
           </span>
         </Link>
-        <button
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-          className="p-2 -mr-2 text-[var(--text)]"
-        >
-          <Menu size={22} />
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            className="p-2 -mr-1 text-[var(--text)]"
+          >
+            <Menu size={22} />
+          </button>
+        </div>
       </div>
 
       {/* Mobile drawer */}

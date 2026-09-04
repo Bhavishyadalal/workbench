@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Field, Button } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check, RefreshCw } from "lucide-react";
@@ -24,6 +25,7 @@ function strengthLabel(length: number, poolSize: number) {
 }
 
 export default function Page() {
+  const { push } = useToast();
   const [length, setLength] = useState(16);
   const [useLower, setUseLower] = useState(true);
   const [useUpper, setUseUpper] = useState(true);
@@ -59,9 +61,20 @@ export default function Page() {
 
   const strength = strengthLabel(length, pool.length);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && !(e.target instanceof HTMLInputElement)) {
+        generate();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [generate]);
+
   const copy = async () => {
     if (!password) return;
     await navigator.clipboard.writeText(password);
+    push("Copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -120,8 +133,11 @@ export default function Page() {
           {toggle("Symbols (!@#…)", useSymbols, setUseSymbols)}
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 flex items-center gap-3">
           <Button onClick={generate} disabled={!pool}>Generate new password</Button>
+          <span className="hidden sm:inline text-xs text-[var(--text-dim)]">
+            or press <kbd>Enter</kbd>
+          </span>
         </div>
       </Card>
     </ToolShell>

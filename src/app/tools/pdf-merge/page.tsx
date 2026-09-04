@@ -5,11 +5,13 @@ import { PDFDocument } from "pdf-lib";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2, GripVertical, X } from "lucide-react";
 
 const tool = findTool("pdf-merge")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -49,6 +51,7 @@ export default function Page() {
       const bytes = await merged.save();
       const blob = new Blob([bytes as BlobPart], { type: "application/pdf" });
       setResult(URL.createObjectURL(blob));
+      push(`Merged ${files.length} PDFs`, "success");
     } catch {
       setError("Couldn't merge those files. Make sure they're all valid PDFs.");
     } finally {
@@ -106,7 +109,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <a href={result} download="merged.pdf">
               <Button variant="secondary">
                 <Download size={15} /> Download merged.pdf

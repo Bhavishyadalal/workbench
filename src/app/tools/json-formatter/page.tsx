@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Button } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check, Sparkles, Minimize2 } from "lucide-react";
@@ -9,6 +10,7 @@ import { Copy, Check, Sparkles, Minimize2 } from "lucide-react";
 const tool = findTool("json-formatter")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [input, setInput] = useState('{\n  "hello": "world",\n  "nested": { "a": 1, "b": [1,2,3] }\n}');
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -38,8 +40,20 @@ export default function Page() {
 
   const copy = async () => {
     await navigator.clipboard.writeText(output);
+    push("Copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      format(2);
+    } else if (e.key === "Escape") {
+      setInput("");
+      setOutput("");
+      setError("");
+    }
   };
 
   return (
@@ -48,19 +62,23 @@ export default function Page() {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           rows={10}
           spellCheck={false}
           placeholder="Paste JSON here…"
           className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm font-mono resize-y outline-none focus:border-[var(--accent)] transition-colors"
         />
 
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="flex flex-wrap items-center gap-2 mt-4">
           <Button onClick={() => format(2)}>
             <Sparkles size={15} /> Format
           </Button>
           <Button variant="secondary" onClick={minify}>
             <Minimize2 size={15} /> Minify
           </Button>
+          <span className="hidden sm:inline text-xs text-[var(--text-dim)] ml-1">
+            <kbd>⌘</kbd>+<kbd>Enter</kbd> to format · <kbd>Esc</kbd> to clear
+          </span>
         </div>
 
         {error && (

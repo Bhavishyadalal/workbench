@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ToolShell from "@/components/ToolShell";
-import { Card, Button, Field, inputClass } from "@/components/ui";
+import { Card, Button, Field, inputClass, EmptyState } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Shuffle } from "lucide-react";
 
@@ -70,7 +70,7 @@ export default function Page() {
 
         <div className="flex flex-col items-center py-8">
           <AnimatePresence mode="wait">
-            {result && (
+            {result ? (
               <motion.span
                 key={spinKey}
                 initial={{ opacity: 0, scale: 0.8, y: 10 }}
@@ -82,6 +82,14 @@ export default function Page() {
               >
                 {result}
               </motion.span>
+            ) : (
+              <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <EmptyState
+                  icon={Shuffle}
+                  title="Nothing picked yet"
+                  hint="Hit the button below to get a random result."
+                />
+              </motion.div>
             )}
           </AnimatePresence>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Button } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check, ArrowDownUp } from "lucide-react";
@@ -9,6 +10,7 @@ import { Copy, Check, ArrowDownUp } from "lucide-react";
 const tool = findTool("url-encode")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [copied, setCopied] = useState(false);
@@ -24,6 +26,7 @@ export default function Page() {
 
   const copy = async () => {
     await navigator.clipboard.writeText(output);
+    push("Copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };

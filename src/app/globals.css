@@ -35,7 +35,39 @@
   --font-body: 'Inter', system-ui, sans-serif;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  color-scheme: dark;
 }
+
+/* Light theme — same structure, warm paper tones instead of warm near-black */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #FAF7EF;
+  --bg-elevated: #F2EDE0;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F7F3E8;
+  --border: #E4DCC8;
+  --border-soft: #ECE5D4;
+
+  --text: #201C12;
+  --text-dim: #6B6455;
+
+  --accent: #C4842A;
+  --accent-dim: #A56C1F;
+  --accent-2: #D5602C;
+  --accent-ink: #FFFBF3;
+
+  --warn: #C4842A;
+  --danger: #D5602C;
+  --success: #4F7A4A;
+}
+
+[data-theme="light"] .grid-texture { opacity: 0.4; }
+[data-theme="light"] .grain { opacity: 0.02; }
+[data-theme="light"] .mesh-glow::before,
+[data-theme="light"] .mesh-glow::after { opacity: 0.1; }
 
 * {
   scrollbar-width: thin;
@@ -53,6 +85,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
+  transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -193,3 +226,96 @@ body {
   transition: width 0.5s var(--ease-out);
 }
 .stat-underline:hover::after { width: 100%; }
+
+/* ---------------------------------------------------------- */
+/* Skeleton shimmer — used for async tool loading states       */
+/* ---------------------------------------------------------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border-radius: 6px;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--text) 8%, transparent),
+    transparent
+  );
+  animation: skeleton-sweep 1.6s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  100% { transform: translateX(100%); }
+}
+
+/* ---------------------------------------------------------- */
+/* Command palette backdrop blur                               */
+/* ---------------------------------------------------------- */
+.palette-backdrop {
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+}
+
+/* ---------------------------------------------------------- */
+/* Star / favorite toggle micro-interaction                    */
+/* ---------------------------------------------------------- */
+@keyframes star-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35) rotate(-8deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.star-pop {
+  animation: star-pop 0.4s var(--ease-spring);
+}
+
+/* ---------------------------------------------------------- */
+/* Success burst — small radial pulse on completed actions     */
+/* ---------------------------------------------------------- */
+@keyframes success-burst {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 45%, transparent); }
+  100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--success) 0%, transparent); }
+}
+.success-burst {
+  animation: success-burst 0.7s var(--ease-out);
+}
+
+/* ---------------------------------------------------------- */
+/* Marquee — used for the changelog / "what's new" strip       */
+/* ---------------------------------------------------------- */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee-scroll 32s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ---------------------------------------------------------- */
+/* Section reveal — quiet scroll-in for section headers only   */
+/* ---------------------------------------------------------- */
+.press {
+  transition: transform 0.15s var(--ease-out);
+}
+.press:active {
+  transform: scale(0.96);
+}
+
+/* Kbd key styling for shortcuts */
+kbd {
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+  box-shadow: 0 1px 0 var(--border);
+}

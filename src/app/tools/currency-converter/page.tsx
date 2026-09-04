@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useMemo } from "react";
 import ToolShell from "@/components/ToolShell";
-import { Card, Field, inputClass } from "@/components/ui";
+import { Card, Field, inputClass, Skeleton } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
-import { ArrowLeftRight, Loader2 } from "lucide-react";
+import { ArrowLeftRight } from "lucide-react";
 
 const tool = findTool("currency-converter")!;
 
@@ -90,9 +90,13 @@ export default function Page() {
             />
           </Field>
           <Field label={`Converted (${to})`}>
-            <div className={`${inputClass} bg-[var(--bg)] font-semibold text-[var(--accent)] flex items-center gap-2`}>
-              {loading ? <Loader2 size={14} className="animate-spin" /> : result || "—"}
-            </div>
+            {loading ? (
+              <Skeleton className="h-[42px] w-full" />
+            ) : (
+              <div className={`${inputClass} bg-[var(--bg)] font-semibold text-[var(--accent)] flex items-center gap-2`}>
+                {result || "—"}
+              </div>
+            )}
           </Field>
         </div>
 

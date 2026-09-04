@@ -5,11 +5,14 @@ import { PDFDocument } from "pdf-lib";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const tool = findTool("pdf-compress")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [quality, setQuality] = useState(60);
   const [busy, setBusy] = useState(false);
@@ -54,6 +57,8 @@ export default function Page() {
       const outBytes = await out.save();
       const blob = new Blob([outBytes as BlobPart], { type: "application/pdf" });
       setResult({ url: URL.createObjectURL(blob), size: blob.size });
+      const pct = Math.max(0, 100 - (blob.size / file.size) * 100);
+      push(`Saved ${pct.toFixed(0)}% — PDF compressed`, "success");
     } catch {
       setError("Couldn't compress that PDF. Try a different file.");
     } finally {
@@ -67,6 +72,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="application/pdf"
+          hint="Works best on scanned or image-heavy PDFs"
           file={file}
           onClear={() => {
             setFile(null);
@@ -99,10 +105,19 @@ export default function Page() {
             {busy && <Loader2 size={15} className="animate-spin" />}
             {busy ? `Compressing… ${progress}%` : "Compress PDF"}
           </Button>
+          {busy && (
+            <div className="mt-3 h-1 w-full bg-[var(--bg-elevated)] rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-[var(--accent)]"
+                animate={{ width: `${progress}%` }}
+                transition={{ ease: "easeOut", duration: 0.2 }}
+              />
+            </div>
+          )}
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <span className="text-sm text-[var(--text-dim)]">
               {(file!.size / 1024).toFixed(0)} KB → {(result.size / 1024).toFixed(0)} KB
               <span className="text-[var(--accent)] ml-1.5">

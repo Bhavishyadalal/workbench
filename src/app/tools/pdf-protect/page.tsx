@@ -52,6 +52,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="application/pdf"
+          hint="You'll set the password after uploading"
           file={file}
           onClear={() => {
             setFile(null);

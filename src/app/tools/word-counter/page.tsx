@@ -35,6 +35,9 @@ export default function Page() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setText("");
+          }}
           placeholder="Paste or type your text here…"
           rows={10}
           className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm resize-y outline-none focus:border-[var(--accent)] transition-colors"

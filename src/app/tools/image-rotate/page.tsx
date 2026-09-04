@@ -55,6 +55,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="image/*"
+          hint="PNG, JPG, or WebP"
           file={file}
           onClear={() => {
             setFile(null);

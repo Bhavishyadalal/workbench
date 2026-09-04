@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Button } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check, ArrowDownUp } from "lucide-react";
@@ -9,6 +10,7 @@ import { Copy, Check, ArrowDownUp } from "lucide-react";
 const tool = findTool("base64")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [input, setInput] = useState("Hello, world!");
   const [error, setError] = useState("");
@@ -25,6 +27,7 @@ export default function Page() {
   const copy = async () => {
     if (!output) return;
     await navigator.clipboard.writeText(output);
+    push("Copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 1200);
   };

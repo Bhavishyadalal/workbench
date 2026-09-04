@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Button, Dropzone, ResultBar } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check } from "lucide-react";
@@ -9,6 +10,7 @@ import { Copy, Check } from "lucide-react";
 const tool = findTool("image-base64")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [base64, setBase64] = useState("");
   const [copied, setCopied] = useState(false);
@@ -23,6 +25,7 @@ export default function Page() {
 
   const copy = async () => {
     await navigator.clipboard.writeText(base64);
+    push("Copied to clipboard");
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -33,6 +36,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="image/*"
+          hint="PNG, JPG, WebP, GIF, or SVG"
           file={file}
           onClear={() => {
             setFile(null);

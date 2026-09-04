@@ -5,11 +5,13 @@ import imageCompression from "browser-image-compression";
 import ToolShell from "@/components/ToolShell";
 import { Card, Button, Field, Dropzone, ResultBar, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
+import { useToast } from "@/components/Toast";
 import { Download, Loader2 } from "lucide-react";
 
 const tool = findTool("image-compress")!;
 
 export default function Page() {
+  const { push } = useToast();
   const [file, setFile] = useState<File | null>(null);
   const [quality, setQuality] = useState(70);
   const [busy, setBusy] = useState(false);
@@ -37,6 +39,8 @@ export default function Page() {
       });
       const url = URL.createObjectURL(compressed);
       setResult({ url, size: compressed.size, name: file.name });
+      const pct = Math.max(0, 100 - (compressed.size / file.size) * 100);
+      push(`Saved ${pct.toFixed(0)}% — image compressed`, "success");
     } catch {
       setError("Couldn't compress that image. Try a different file.");
     } finally {
@@ -89,7 +93,7 @@ export default function Page() {
         </div>
 
         {result && (
-          <ResultBar>
+          <ResultBar celebrate>
             <span className="text-sm text-[var(--text-dim)]">
               {(file!.size / 1024).toFixed(0)} KB → {(result.size / 1024).toFixed(0)} KB
               <span className="text-[var(--accent)] ml-1.5">

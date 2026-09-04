@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Button } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check } from "lucide-react";
@@ -37,11 +38,13 @@ const transforms: Record<string, (s: string) => string> = {
 };
 
 export default function Page() {
+  const { push } = useToast();
   const [text, setText] = useState("the quick brown fox jumps over the lazy dog");
   const [copied, setCopied] = useState<string | null>(null);
 
   const copy = async (label: string, value: string) => {
     await navigator.clipboard.writeText(value);
+    push("Copied to clipboard");
     setCopied(label);
     setTimeout(() => setCopied(null), 1200);
   };

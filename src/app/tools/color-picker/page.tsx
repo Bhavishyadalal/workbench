@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import ToolShell from "@/components/ToolShell";
+import { useToast } from "@/components/Toast";
 import { Card, Field, inputClass } from "@/components/ui";
 import { findTool } from "@/lib/tools-registry";
 import { Copy, Check } from "lucide-react";
@@ -32,6 +33,7 @@ function rgbToHsl(r: number, g: number, b: number) {
 }
 
 export default function Page() {
+  const { push } = useToast();
   const [hex, setHex] = useState("#E8A33D");
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
@@ -46,6 +48,7 @@ export default function Page() {
 
   const copy = async (key: string, value: string) => {
     await navigator.clipboard.writeText(value);
+    push("Copied to clipboard");
     setCopiedField(key);
     setTimeout(() => setCopiedField(null), 1200);
   };

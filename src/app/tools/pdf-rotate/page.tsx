@@ -49,6 +49,7 @@ export default function Page() {
         <Dropzone
           onFiles={handleFile}
           accept="application/pdf"
+          hint="Rotate individual pages or the whole document"
           file={file}
           onClear={() => {
             setFile(null);
