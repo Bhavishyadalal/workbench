@@ -230,14 +230,14 @@ export default function HomeClient() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08, ease: easeOut }}
-            className="text-[2.6rem] sm:text-6xl font-semibold tracking-tight leading-[1.05] max-w-2xl"
+            className="text-[2.6rem] sm:text-6xl font-semibold tracking-tight leading-[1.05] max-w-2xl break-words"
             style={{ fontFamily: "var(--font-display)" }}
           >
             One bench, every
             <br />
             <span className="text-gradient">tool you keep</span>
             <br />
-            re&#8209;googling.
+            re-googling.
           </motion.h1>
 
           <motion.p
@@ -254,7 +254,7 @@ export default function HomeClient() {
 
       {/* Changelog marquee strip */}
       <section className="border-b border-[var(--border-soft)] py-2.5 overflow-hidden">
-        <div className="flex items-center gap-2 px-5 max-w-6xl mx-auto mb-0">
+        <div className="marquee-mask flex items-center gap-2 px-5 max-w-6xl mx-auto mb-0">
           <div className="marquee-track flex gap-8 whitespace-nowrap will-change-transform">
             {[...CHANGELOG, ...CHANGELOG].map((line, i) => (
               <span key={i} className="inline-flex items-center gap-2 text-xs text-[var(--text-dim)]">

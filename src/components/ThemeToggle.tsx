@@ -12,7 +12,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
     <button
       onClick={toggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className={`press relative w-8 h-8 flex items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] hover:text-[var(--text)] hover:border-[var(--accent-dim)] transition-colors overflow-hidden shrink-0 ${className}`}
+      className={`tap-target press relative w-8 h-8 flex items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-dim)] hover:text-[var(--text)] hover:border-[var(--accent-dim)] transition-colors overflow-hidden shrink-0 ${className}`}
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span

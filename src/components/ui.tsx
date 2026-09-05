@@ -31,7 +31,7 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "press inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100";
+    "tap-target press inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100";
   const styles = {
     primary: "bg-[var(--accent)] text-[var(--accent-ink)] hover:brightness-110",
     secondary:
