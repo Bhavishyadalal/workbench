@@ -15,3 +15,11 @@
   height: 100%;
   display: block;
 }
+
+.warp-text-fallback {
+  position: relative;
+  display: block;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+  text-align: left;
+}

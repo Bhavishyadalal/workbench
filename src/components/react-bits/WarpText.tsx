@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, CSSProperties } from "react";
+import { useEffect, useRef, useState, CSSProperties } from "react";
 import { Renderer, Program, Mesh, Triangle, Texture } from "ogl";
 import "./WarpText.css";
 
@@ -199,6 +199,7 @@ const buildTextCanvas = ({
     fontWeight: String(props.fontWeight),
     letterSpacing: getFontValue(props.letterSpacing),
     lineHeight: typeof props.lineHeight === "number" ? String(props.lineHeight) : props.lineHeight,
+    color: props.color,
   });
   container.appendChild(probe);
   const computed = window.getComputedStyle(probe);
@@ -210,13 +211,16 @@ const buildTextCanvas = ({
   if (!Number.isFinite(lineHeight)) {
     lineHeight = fontSizePx * (typeof props.lineHeight === "number" ? props.lineHeight : 0.92);
   }
+  // Canvas2D can't parse CSS custom properties (e.g. "var(--text)") directly —
+  // resolve through the probe element's computed style, same as font family.
+  const resolvedColor = computed.color || "#ffffff";
   probe.remove();
 
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.fillStyle = props.color;
+  ctx.fillStyle = resolvedColor;
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
 
@@ -276,6 +280,7 @@ const WarpText = ({
   style,
 }: WarpTextProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [webglReady, setWebglReady] = useState(false);
   const propsRef = useRef<WarpTextProps>({
     text,
     color,
@@ -452,6 +457,7 @@ const WarpText = ({
       texture.image = textCanvas;
       texture.needsUpdate = true;
       renderOnce();
+      setWebglReady(true);
     };
 
     const resize = () => {
@@ -484,6 +490,7 @@ const WarpText = ({
       contextLost = true;
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
+      setWebglReady(false);
     };
 
     const onVisibility = () => {
@@ -549,6 +556,15 @@ const WarpText = ({
     document.addEventListener("visibilitychange", onVisibility);
     mediaQuery?.addEventListener("change", onReducedMotion);
 
+    // Theme toggles flip data-theme/data-ai-theme on <html> directly
+    // (no React re-render), so re-rasterize when they change to pick up
+    // the new resolved value of CSS-variable colors like var(--text).
+    const themeObserver = new MutationObserver(() => rasterize());
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "data-ai-theme"],
+    });
+
     syncUniforms(program, propsRef.current);
     contextRef.current = { program, rasterize };
     resize();
@@ -560,6 +576,7 @@ const WarpText = ({
       if (raf) cancelAnimationFrame(raf);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
+      themeObserver.disconnect();
       canvas.removeEventListener("pointermove", onPointerMove);
       canvas.removeEventListener("pointerleave", onPointerLeave);
       canvas.removeEventListener("webglcontextlost", onContextLost);
@@ -588,7 +605,28 @@ const WarpText = ({
       style={style}
       role="img"
       aria-label={text}
-    />
+    >
+      {/* Real DOM text — always present so the headline is legible even if
+          WebGL fails to init, a shader errors, or a color/font CSS variable
+          fails to resolve on the canvas. Hidden (not removed) once the
+          WebGL canvas has successfully rasterized at least once. */}
+      <span
+        aria-hidden="true"
+        className="warp-text-fallback"
+        style={{
+          opacity: webglReady ? 0 : 1,
+          color,
+          fontFamily,
+          fontWeight,
+          letterSpacing,
+          lineHeight: typeof lineHeight === "number" ? lineHeight : undefined,
+          fontSize,
+          whiteSpace: "pre-wrap",
+        }}
+      >
+        {text}
+      </span>
+    </div>
   );
 };
 

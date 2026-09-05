@@ -686,3 +686,35 @@ kbd {
     transparent 0%, var(--border-soft) 15%, var(--border-soft) 85%, transparent 100%);
   pointer-events: none;
 }
+
+/* ────────────────────────────────────────
+   React Bits integrations — theme fit
+───────────────────────────────────────── */
+
+/* Hero badge pill wrapped in StarBorder: tighten inner content
+   so it reads as a pill, not a big button. */
+.hero-badge-star .inner-content {
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+}
+.hero-badge-star.star-border-container {
+  border-radius: 9999px !important;
+}
+
+/* WarpText used for the hero headline: contain it, kill default
+   min-height so it hugs the two lines instead of leaving empty space. */
+.hero-warp-text.warp-text {
+  min-height: 0;
+}
+
+/* GlareHover wrapping existing "how it works" cards: let the card's
+   own border-radius show through the glare clip. */
+.trust-card-glare.glare-hover {
+  border-radius: inherit;
+}
+
+/* ScrollFloat section headings reuse the site's display font + gradient
+   utility already defined above; keep default h2 margins collapsed. */
+.section-scroll-float {
+  margin: 0;
+}
