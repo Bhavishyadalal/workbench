@@ -20,7 +20,6 @@ import { tools, categoryMeta, ToolCategory } from "@/lib/tools-registry";
 import { useFavorites } from "@/lib/hooks";
 import ThemeToggle from "@/components/ThemeToggle";
 import SoundToggle from "@/components/SoundToggle";
-import AIThemePicker from "@/components/AIThemePicker";
 import { usePalette } from "@/components/CommandPalette";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
@@ -81,13 +80,12 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <span
             className="text-lg font-semibold tracking-tight text-gradient"
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{ fontFamily: "var(--font-brand)" }}
           >
             Workbench
           </span>
         </Link>
-        <div className="hidden lg:flex items-center gap-1.5" data-tour="theme">
-          <AIThemePicker />
+        <div className="hidden lg:flex items-center gap-1" data-tour="theme">
           <ThemeToggle />
           <SoundToggle />
         </div>
@@ -295,13 +293,12 @@ export default function Sidebar() {
           </div>
           <span
             className="font-semibold text-base text-gradient"
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{ fontFamily: "var(--font-brand)" }}
           >
             Workbench
           </span>
         </Link>
-        <div className="flex items-center gap-1.5" data-tour="theme">
-          <AIThemePicker />
+        <div className="flex items-center gap-1" data-tour="theme">
           <ThemeToggle />
           <SoundToggle />
         </div>

@@ -5,8 +5,8 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import { ToastProvider } from "@/components/Toast";
 import { CommandPaletteProvider } from "@/components/CommandPalette";
 import PageTransition from "@/components/PageTransition";
-import OpeningIntro from "@/components/OpeningIntro";
-import ParticleCanvas from "@/components/ParticleCanvas";
+import Splash from "@/components/Splash";
+import CursorGlow from "@/components/CursorGlow";
 
 const title = "Workbench — Every tool you keep googling, in one place";
 const description =
@@ -53,9 +53,6 @@ const themeInitScript = `
     var stored = window.localStorage.getItem('wb:theme');
     var theme = stored === 'light' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
-    var aiStored = window.localStorage.getItem('wb:ai-theme');
-    var aiTheme = aiStored ? JSON.parse(aiStored) : 'cosmic';
-    document.documentElement.setAttribute('data-ai-theme', aiTheme);
   } catch (e) {}
 })();
 `;
@@ -69,8 +66,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="min-h-full">
-        <OpeningIntro />
-        <ParticleCanvas />
+        <Splash />
+        <CursorGlow />
         <div className="grid-texture" />
         <div className="grain" />
         <ToastProvider>
