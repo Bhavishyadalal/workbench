@@ -34,6 +34,11 @@ import { useFavorites, useRecentTools } from "@/lib/hooks";
 import BackToTop from "@/components/BackToTop";
 import Tour from "@/components/Tour";
 import AIThemePicker from "@/components/AIThemePicker";
+import StarBorder from "@/components/react-bits/StarBorder";
+import ClickSpark from "@/components/react-bits/ClickSpark";
+import GlareHover from "@/components/react-bits/GlareHover";
+import ScrollFloat from "@/components/react-bits/ScrollFloat";
+import WarpText from "@/components/react-bits/WarpText";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
 
@@ -374,7 +379,14 @@ export default function HomeClient() {
         <div className="mesh-glow" aria-hidden />
         <div className="mesh-glow-3" aria-hidden />
 
-        <div className="relative max-w-4xl mx-auto">
+        <ClickSpark
+          sparkColor="var(--accent)"
+          sparkSize={9}
+          sparkRadius={22}
+          sparkCount={7}
+          duration={450}
+          className="relative max-w-4xl mx-auto"
+        >
           {/* Floating AI badge & Quick Settings Row */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
             <motion.div
@@ -383,21 +395,25 @@ export default function HomeClient() {
               transition={{ duration: 0.5, ease: easeOut }}
               className="inline-flex items-center gap-2"
             >
-              <span
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border shadow-[var(--shadow-sm)]"
-                style={{
-                  background: "color-mix(in srgb, var(--accent) 12%, var(--bg-card))",
-                  borderColor: "color-mix(in srgb, var(--accent) 32%, var(--border))",
-                  color: "var(--accent-bright)",
-                }}
+              <StarBorder
+                as="div"
+                color="var(--accent)"
+                speed="4s"
+                thickness={1}
+                className="hero-badge-star"
+                backgroundColor="color-mix(in srgb, var(--accent) 12%, var(--bg-card))"
+                borderColor="color-mix(in srgb, var(--accent) 32%, var(--border))"
+                textColor="var(--accent-bright)"
               >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
+                <span className="inline-flex items-center gap-2 text-xs font-semibold whitespace-nowrap">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
+                  </span>
+                  <Sparkles size={12} className="text-[var(--accent)]" />
+                  {tools.length} AI & Web Tools · 100% Local Execution
                 </span>
-                <Sparkles size={12} className="text-[var(--accent)]" />
-                {tools.length} AI & Web Tools · 100% Local Execution
-              </span>
+              </StarBorder>
             </motion.div>
 
             <div className="flex items-center gap-2">
@@ -415,18 +431,30 @@ export default function HomeClient() {
           </div>
 
           {/* Headline */}
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: easeOut }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] max-w-3xl mb-6"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="max-w-3xl mb-6 -ml-1 sm:-ml-2"
           >
-            One bench,{" "}
-            <span className="text-gradient">every tool</span>
-            <br />
-            you keep re&#8209;googling.
-          </motion.h1>
+            <WarpText
+              text={"One bench, every tool\nyou keep re-googling."}
+              color="var(--text)"
+              fontFamily="var(--font-display)"
+              fontWeight={700}
+              letterSpacing="-0.02em"
+              lineHeight={1.05}
+              warpStrength={0.06}
+              pointerStrength={0.32}
+              refraction={0.014}
+              fontSize="clamp(2.25rem, 6.2vw, 4.75rem)"
+              style={{
+                height: "clamp(140px, 22vw, 230px)",
+                marginLeft: "-0.15em",
+              }}
+              className="hero-warp-text"
+            />
+          </motion.div>
 
           {/* Sub */}
           <motion.p
@@ -461,7 +489,7 @@ export default function HomeClient() {
               Works offline
             </div>
           </motion.div>
-        </div>
+        </ClickSpark>
       </section>
 
       {/* ── Changelog marquee ── */}
@@ -542,12 +570,15 @@ export default function HomeClient() {
             transition={{ duration: 0.45, ease: easeOut }}
             className="mb-10 max-w-lg"
           >
-            <h2
-              className="text-2xl sm:text-3xl font-bold tracking-tight mb-2"
+            <ScrollFloat
+              containerClassName="section-scroll-float mb-2"
+              textClassName="text-2xl sm:text-3xl font-bold tracking-tight"
               style={{ fontFamily: "var(--font-display)" }}
+              stagger={0.015}
+              animationDuration={0.6}
             >
-              How &ldquo;nothing uploaded&rdquo; actually works
-            </h2>
+              How “nothing uploaded” actually works
+            </ScrollFloat>
             <p className="text-sm text-[var(--text-dim)]">
               Not a privacy promise — a technical fact you can verify yourself.
             </p>
@@ -561,9 +592,18 @@ export default function HomeClient() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.1, ease: easeOut }}
-                className="glass rounded-2xl p-6 card-gradient-border"
+                className="glass rounded-2xl card-gradient-border relative overflow-hidden"
                 style={{ "--card-glow": step.color } as React.CSSProperties}
               >
+                <GlareHover
+                  glareColor={step.color}
+                  glareOpacity={0.18}
+                  glareAngle={-30}
+                  glareSize={220}
+                  transitionDuration={700}
+                  className="trust-card-glare absolute inset-0"
+                />
+                <div className="relative p-6">
                 <div
                   className="w-10 h-10 flex items-center justify-center rounded-xl mb-5 relative overflow-hidden"
                   style={{
@@ -588,6 +628,7 @@ export default function HomeClient() {
                 <p className="text-xs text-[var(--text-dim)] leading-relaxed">
                   {step.body}
                 </p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -605,12 +646,15 @@ export default function HomeClient() {
             transition={{ duration: 0.4, ease: easeOut }}
             className="flex items-center justify-between gap-4 mb-4 flex-wrap"
           >
-            <h2
-              className="text-xl sm:text-2xl font-bold tracking-tight"
+            <ScrollFloat
+              containerClassName="section-scroll-float"
+              textClassName="text-xl sm:text-2xl font-bold tracking-tight"
               style={{ fontFamily: "var(--font-display)" }}
+              stagger={0.012}
+              animationDuration={0.5}
             >
               Browse all tools
-            </h2>
+            </ScrollFloat>
             <span className="text-xs text-[var(--text-dim)]">
               {activeCategory === "all"
                 ? tools.length
