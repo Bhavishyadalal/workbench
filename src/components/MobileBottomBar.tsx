@@ -6,6 +6,7 @@ import { Home, Search, Star, Menu, X } from "lucide-react";
 import { useTheme } from "@/lib/hooks";
 import { usePalette } from "@/components/CommandPalette";
 import { useFavorites } from "@/lib/hooks";
+import AIThemePicker from "@/components/AIThemePicker";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { tools, categoryMeta, ToolCategory } from "@/lib/tools-registry";
@@ -148,12 +149,15 @@ export default function MobileBottomBar() {
                 >
                   All Tools
                 </span>
-                <button
-                  onClick={() => setDrawerOpen(false)}
-                  className="press p-1.5 rounded-lg text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--bg-card)]"
-                >
-                  <X size={18} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <AIThemePicker />
+                  <button
+                    onClick={() => setDrawerOpen(false)}
+                    className="press p-1.5 rounded-lg text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--bg-card)]"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
               </div>
 
               <div className="overflow-y-auto pb-6" style={{ maxHeight: "calc(82vh - 60px)" }}>
