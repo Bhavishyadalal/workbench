@@ -65,7 +65,7 @@ export default function ToolShell({
         {/* Category pill */}
         <div className="flex items-center gap-2 mb-3">
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase border"
+            className="shine inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold tracking-wider uppercase border"
             style={{
               color: meta.accent,
               borderColor: `color-mix(in srgb, ${meta.accent} 30%, var(--border))`,

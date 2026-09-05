@@ -80,7 +80,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <span
             className="text-lg font-semibold tracking-tight text-gradient"
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{ fontFamily: "var(--font-brand)" }}
           >
             Workbench
           </span>
@@ -293,7 +293,7 @@ export default function Sidebar() {
           </div>
           <span
             className="font-semibold text-base text-gradient"
-            style={{ fontFamily: "var(--font-display)" }}
+            style={{ fontFamily: "var(--font-brand)" }}
           >
             Workbench
           </span>

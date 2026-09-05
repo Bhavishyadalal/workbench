@@ -163,7 +163,7 @@ function ToolCard({
         ref={ref}
         href={`/tools/${tool.slug}`}
         onMouseMove={handleMove}
-        className="tool-card card-gradient-border group flex flex-col justify-between h-full bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5 min-h-[100px]"
+        className="tool-card card-gradient-border spin-border group flex flex-col justify-between h-full bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5 min-h-[100px]"
         style={{ "--card-glow": accent } as React.CSSProperties}
       >
         <div className="flex items-start justify-between gap-3 mb-2">
@@ -211,7 +211,7 @@ function StripCard({
     <motion.div variants={item} className="shrink-0 w-[200px] sm:w-[220px]">
       <Link
         href={`/tools/${tool.slug}`}
-        className="group flex flex-col h-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 transition-all hover:border-[var(--accent-dim)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
+        className="shine group flex flex-col h-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 transition-all hover:border-[var(--accent-dim)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
       >
         <div className="flex items-start justify-between gap-2 mb-3">
           <div
@@ -372,6 +372,11 @@ export default function HomeClient() {
       <section className="relative px-4 sm:px-6 pt-8 pb-12 sm:pt-16 sm:pb-20 border-b border-[var(--border-soft)] overflow-hidden">
         <div className="mesh-glow" aria-hidden />
         <div className="mesh-glow-3" aria-hidden />
+        <div className="aurora" aria-hidden>
+          <span />
+          <span />
+          <span />
+        </div>
 
         <div className="relative max-w-4xl mx-auto">
           {/* Floating badge */}
@@ -382,14 +387,14 @@ export default function HomeClient() {
             className="inline-flex items-center gap-2 mb-8"
           >
             <span
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border"
+              className="shine inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border"
               style={{
                 background: "color-mix(in srgb, var(--accent) 10%, var(--bg-card))",
                 borderColor: "color-mix(in srgb, var(--accent) 30%, var(--border))",
                 color: "var(--accent-bright)",
               }}
             >
-              <span className="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-glow" />
+              <span className="pulse-ring w-1.5 h-1.5 bg-[var(--accent)] rounded-full" />
               <Zap size={11} className="inline" />
               {tools.length} tools · runs locally · nothing uploaded
             </span>
@@ -404,7 +409,7 @@ export default function HomeClient() {
             style={{ fontFamily: "var(--font-display)" }}
           >
             One bench,{" "}
-            <span className="text-gradient">every tool</span>
+            <span className="text-shimmer">every tool</span>
             <br />
             you keep re&#8209;googling.
           </motion.h1>
@@ -514,8 +519,9 @@ export default function HomeClient() {
       </ScrollRow>
 
       {/* ── How it works ── */}
-      <section className="px-4 sm:px-6 py-14 border-y border-[var(--border-soft)] cv-auto" style={{ background: "color-mix(in srgb, var(--bg-elevated) 40%, var(--bg))" }}>
-        <div className="max-w-5xl mx-auto">
+      <section className="relative px-4 sm:px-6 py-14 border-y border-[var(--border-soft)] cv-auto overflow-hidden" style={{ background: "color-mix(in srgb, var(--bg-elevated) 40%, var(--bg))" }}>
+        <div className="bg-aurora-pan absolute inset-0 pointer-events-none" aria-hidden />
+        <div className="relative max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -542,7 +548,7 @@ export default function HomeClient() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.1, ease: easeOut }}
-                className="glass rounded-2xl p-6 card-gradient-border"
+                className="glass rounded-2xl p-6 card-gradient-border spin-border"
                 style={{ "--card-glow": step.color } as React.CSSProperties}
               >
                 <div
@@ -658,7 +664,7 @@ export default function HomeClient() {
           <div className="flex items-center gap-2.5">
             <span
               className="text-sm font-semibold text-gradient"
-              style={{ fontFamily: "var(--font-display)" }}
+              style={{ fontFamily: "var(--font-brand)" }}
             >
               Workbench
             </span>

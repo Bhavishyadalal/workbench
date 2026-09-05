@@ -5,6 +5,8 @@ import MobileBottomBar from "@/components/MobileBottomBar";
 import { ToastProvider } from "@/components/Toast";
 import { CommandPaletteProvider } from "@/components/CommandPalette";
 import PageTransition from "@/components/PageTransition";
+import Splash from "@/components/Splash";
+import CursorGlow from "@/components/CursorGlow";
 
 const title = "Workbench — Every tool you keep googling, in one place";
 const description =
@@ -64,6 +66,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="min-h-full">
+        <Splash />
+        <CursorGlow />
         <div className="grid-texture" />
         <div className="grain" />
         <ToastProvider>
