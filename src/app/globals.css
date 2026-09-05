@@ -1,106 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
-/* Fonts are loaded via next/font in layout.tsx (self-hosted, preloaded,
-   zero extra network round-trip) — see --font-display/--font-body below,
-   which resolve to the CSS variables next/font injects. */
 
 :root {
-  /* Base surfaces — warm near-black */
-  --bg: #0D0C0A;
-  --bg-elevated: #17150F;
-  --bg-card: #1C1A14;
-  --bg-card-hover: #221F16;
-  --border: #2E2A20;
-  --border-soft: #221F17;
+  /* ── Surfaces ── */
+  --bg: #09080A;
+  --bg-elevated: #111019;
+  --bg-card: #16151F;
+  --bg-card-hover: #1C1A28;
 
-  /* Text */
-  --text: #F6F3EA;
-  --text-dim: #9A9585;
+  /* ── Borders ── */
+  --border: #2A2738;
+  --border-soft: #1E1D2A;
 
-  /* Two-tone accent system — brass warming into ember, used for depth & gradients */
-  --accent: #EFB347;
-  --accent-dim: #C4842A;
-  --accent-2: #E8703D;
-  --accent-ink: #1A1204;
+  /* ── Text ── */
+  --text: #F0EEF8;
+  --text-dim: #7B7897;
+  --text-muted: #4D4B62;
 
-  --warn: #EFB347;
-  --danger: #E8703D;
-  --success: #7FA87A;
+  /* ── Accent system — violet-to-indigo-to-rose ── */
+  --accent: #A78BFA;
+  --accent-bright: #C4B5FD;
+  --accent-dim: #7C5CF6;
+  --accent-2: #F472B6;
+  --accent-3: #38BDF8;
+  --accent-ink: #0D0A1F;
 
-  /* Category colors — saturated but coherent, each does navigational work */
-  --cat-image: #5FC7B0;
-  --cat-pdf: #6C9CF0;
-  --cat-convert: #EFB347;
-  --cat-text: #C994E8;
-  --cat-extras: #E8703D;
+  /* ── Semantic ── */
+  --warn: #FBBF24;
+  --danger: #F87171;
+  --success: #4ADE80;
 
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
+  /* ── Category accents ── */
+  --cat-image: #22D3EE;
+  --cat-pdf:   #818CF8;
+  --cat-convert:#FBBF24;
+  --cat-text:  #A78BFA;
+  --cat-extras:#FB7185;
 
+  /* ── Glass ── */
+  --glass: color-mix(in srgb, var(--bg-card) 70%, transparent);
+  --glass-border: color-mix(in srgb, var(--accent) 18%, var(--border));
+
+  /* ── Shadows ── */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 24px color-mix(in srgb, var(--accent) 30%, transparent);
+  --shadow-glow-2: 0 0 24px color-mix(in srgb, var(--accent-2) 25%, transparent);
+
+  /* ── Fonts ── */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  /* ── Easing ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
   color-scheme: dark;
 }
 
-/* Light theme — same structure, warm paper tones instead of warm near-black */
+/* ── Light theme ── */
 [data-theme="light"] {
   color-scheme: light;
 
-  --bg: #FAF7EF;
-  --bg-elevated: #F2EDE0;
+  --bg: #F8F7FF;
+  --bg-elevated: #EEEDF9;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #F7F3E8;
-  --border: #E4DCC8;
-  --border-soft: #ECE5D4;
+  --bg-card-hover: #F3F2FD;
+  --border: #D8D6EE;
+  --border-soft: #E5E4F5;
 
-  --text: #201C12;
-  --text-dim: #6B6455;
+  --text: #1A1830;
+  --text-dim: #5C5980;
+  --text-muted: #9896B8;
 
-  --accent: #C4842A;
-  --accent-dim: #A56C1F;
-  --accent-2: #D5602C;
-  --accent-ink: #FFFBF3;
+  --accent: #7C3AED;
+  --accent-bright: #8B5CF6;
+  --accent-dim: #6D28D9;
+  --accent-2: #DB2777;
+  --accent-3: #0284C7;
+  --accent-ink: #F5F3FF;
 
-  --warn: #C4842A;
-  --danger: #D5602C;
-  --success: #4F7A4A;
+  --warn: #D97706;
+  --danger: #DC2626;
+  --success: #16A34A;
+
+  --glass: color-mix(in srgb, #fff 80%, transparent);
+  --glass-border: color-mix(in srgb, var(--accent) 20%, var(--border));
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.16);
+  --shadow-glow: 0 0 24px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 
-[data-theme="light"] .grid-texture { opacity: 0.4; }
-[data-theme="light"] .grain { opacity: 0.02; }
+[data-theme="light"] .grid-texture  { opacity: 0.25; }
+[data-theme="light"] .grain         { opacity: 0.015; }
 [data-theme="light"] .mesh-glow::before,
-[data-theme="light"] .mesh-glow::after { opacity: 0.1; }
+[data-theme="light"] .mesh-glow::after { opacity: 0.08; }
+
+/* ────────────────────────────────────────
+   Reset & Base
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
-
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
-html { scroll-behavior: smooth; }
-
-/* Hard guarantee against horizontal overflow/glitching on mobile: no
-   single element (long headline, unbroken URL/filename in a tool result,
-   a fixed-width decoration) should ever be able to push the viewport
-   wider than 100vw and cause sideways scroll/jitter. */
-html, body {
-  overflow-x: hidden;
-  max-width: 100vw;
-}
-body {
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
   transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Safe area for notch/island phones */
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -118,73 +141,34 @@ body {
   border-radius: 4px;
 }
 
-/* ---------------------------------------------------------- */
-/* Mobile hardening                                             */
-/* ---------------------------------------------------------- */
-
-/* iOS Safari auto-zooms the viewport when a focused input's font-size
-   is under 16px. Every tool page feeds text through inputClass / a
-   plain input|textarea|select, so this single rule fixes the zoom-jump
-   on all 35 tool pages at once without touching each one individually. */
-@media (max-width: 768px) {
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
-}
-
-/* Comfortable tap targets on touch devices for primary controls —
-   opted in via .tap-target rather than applied globally, since several
-   buttons (favorite stars, dropzone clear icon) are deliberately compact
-   inline controls where a forced min-height would break the layout. */
-@media (pointer: coarse) {
-  .tap-target {
-    min-height: 40px;
-    min-width: 40px;
-  }
-}
-
-/* Safe-area padding so content clears notches / home indicators */
-.safe-top { padding-top: env(safe-area-inset-top); }
-.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-
-/* Prevent iOS Safari's rubber-band scroll from revealing bare background
-   past the fixed grid/grain layers at the top/bottom of the page. */
-html, body {
-  overscroll-behavior-y: none;
-}
-
-/* Use dynamic viewport height where available so mobile browser chrome
-   (address bar show/hide) doesn't cause layout jumps on min-h-screen. */
-.min-h-screen {
-  min-height: 100svh;
-}
-
-/* Blueprint grid */
+/* ────────────────────────────────────────
+   Background textures
+───────────────────────────────────────── */
 .grid-texture {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.55;
+  opacity: 0.45;
   background-image:
     linear-gradient(var(--border-soft) 1px, transparent 1px),
     linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 0%, transparent 75%);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 0%, transparent 80%);
 }
 
 .grain {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0.025;
   z-index: 1;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Animated gradient mesh — the hero's single orchestrated visual moment */
+/* ────────────────────────────────────────
+   Mesh glow — hero visual
+───────────────────────────────────────── */
 .mesh-glow {
   position: absolute;
   inset: 0;
@@ -196,68 +180,100 @@ html, body {
 .mesh-glow::after {
   content: '';
   position: absolute;
-  width: 60vw;
-  height: 60vw;
-  max-width: 620px;
-  max-height: 620px;
+  width: 65vw;
+  height: 65vw;
+  max-width: 700px;
+  max-height: 700px;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.16;
-  animation: mesh-drift 16s ease-in-out infinite;
+  filter: blur(100px);
+  opacity: 0.2;
+  animation: mesh-drift 18s ease-in-out infinite;
 }
 .mesh-glow::before {
-  background: radial-gradient(circle, var(--accent), transparent 70%);
-  top: -18%;
-  left: 8%;
+  background: radial-gradient(circle, var(--accent), var(--accent-dim) 40%, transparent 70%);
+  top: -20%;
+  left: 5%;
 }
 .mesh-glow::after {
   background: radial-gradient(circle, var(--accent-2), transparent 70%);
-  top: -6%;
-  right: 4%;
-  animation-delay: -8s;
-  animation-duration: 19s;
+  top: -10%;
+  right: 2%;
+  animation-delay: -9s;
+  animation-duration: 22s;
+  opacity: 0.15;
 }
+
+/* Third orb — cyan bottom */
+.mesh-glow-3 {
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  max-width: 500px;
+  max-height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.08;
+  background: radial-gradient(circle, var(--accent-3), transparent 70%);
+  bottom: -20%;
+  right: 20%;
+  animation: mesh-drift 25s ease-in-out infinite;
+  animation-delay: -12s;
+  pointer-events: none;
+}
+
 @keyframes mesh-drift {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(4%, 6%) scale(1.08); }
-  66% { transform: translate(-3%, 2%) scale(0.96); }
+  33%       { transform: translate(5%, 8%) scale(1.1); }
+  66%       { transform: translate(-4%, 3%) scale(0.95); }
 }
 
 @keyframes glow-pulse {
   0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  50%       { opacity: 1; }
 }
-.animate-glow {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
+.animate-glow { animation: glow-pulse 3s ease-in-out infinite; }
 
-/* Corner ticks — blueprint device for the logo mark */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+/* ────────────────────────────────────────
+   Corner ticks (logo mark)
+───────────────────────────────────────── */
 .corner-ticks { position: relative; }
 .corner-ticks::before,
 .corner-ticks::after {
   content: '';
   position: absolute;
-  width: 6px;
-  height: 6px;
-  border: 1px solid var(--accent-dim);
-  opacity: 0.6;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--accent-dim);
+  opacity: 0.7;
 }
 .corner-ticks::before { top: -3px; left: -3px; border-right: none; border-bottom: none; }
-.corner-ticks::after { bottom: -3px; right: -3px; border-left: none; border-top: none; }
+.corner-ticks::after  { bottom: -3px; right: -3px; border-left: none; border-top: none; }
 
-/* Gradient text used once, deliberately, in the hero headline */
+/* ────────────────────────────────────────
+   Text gradient
+───────────────────────────────────────── */
 .text-gradient {
-  background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 90%);
+  background: linear-gradient(120deg, var(--accent-bright) 0%, var(--accent) 40%, var(--accent-2) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Tool card — glow-on-hover treatment */
+/* ────────────────────────────────────────
+   Tool card — glow-on-hover with mousemove
+───────────────────────────────────────── */
 .tool-card {
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  border-radius: 12px;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
 }
 .tool-card::before {
   content: '';
@@ -265,34 +281,102 @@ html, body {
   inset: 0;
   z-index: -1;
   opacity: 0;
-  background: radial-gradient(180px circle at var(--mx, 50%) var(--my, 0%), var(--card-glow, var(--accent)) 0%, transparent 65%);
+  border-radius: inherit;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), var(--card-glow, var(--accent)) 0%, transparent 70%);
+  transition: opacity 0.4s ease;
+}
+.tool-card:hover::before    { opacity: 0.12; }
+.tool-card:hover            { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.tool-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, var(--card-glow, var(--accent)) 0%, transparent 60%) border-box;
+  opacity: 0;
   transition: opacity 0.35s ease;
+  pointer-events: none;
 }
-.tool-card:hover::before { opacity: 0.13; }
+.tool-card:hover::after { opacity: 0.5; }
 
-/* Number-tile stat card underline sweep */
-.stat-underline {
+/* ────────────────────────────────────────
+   Button glow
+───────────────────────────────────────── */
+.btn-glow {
   position: relative;
+  overflow: hidden;
 }
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(8px);
+}
+.btn-glow:hover::before { opacity: 0.6; }
+
+/* ────────────────────────────────────────
+   Category pill chips
+───────────────────────────────────────── */
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  background: var(--bg-elevated);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cat-pill:hover {
+  color: var(--text);
+  border-color: var(--accent-dim);
+  background: var(--bg-card);
+}
+.cat-pill.active {
+  color: var(--accent-bright);
+  border-color: var(--accent-dim);
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-card));
+  box-shadow: 0 0 0 1px var(--accent-dim);
+}
+
+/* ────────────────────────────────────────
+   Stat card underline sweep
+───────────────────────────────────────── */
+.stat-underline { position: relative; }
 .stat-underline::after {
   content: '';
   position: absolute;
-  left: 0; bottom: -1px;
+  left: 0; bottom: -2px;
   height: 2px;
   width: 0%;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  transition: width 0.5s var(--ease-out);
+  border-radius: 2px;
+  transition: width 0.55s var(--ease-out);
 }
 .stat-underline:hover::after { width: 100%; }
 
-/* ---------------------------------------------------------- */
-/* Skeleton shimmer — used for async tool loading states       */
-/* ---------------------------------------------------------- */
+/* ────────────────────────────────────────
+   Skeleton shimmer
+───────────────────────────────────────── */
 .skeleton {
   position: relative;
   overflow: hidden;
   background: var(--bg-elevated);
-  border-radius: 6px;
+  border-radius: 8px;
 }
 .skeleton::after {
   content: '';
@@ -302,124 +386,204 @@ html, body {
   background: linear-gradient(
     90deg,
     transparent,
-    color-mix(in srgb, var(--text) 8%, transparent),
+    color-mix(in srgb, var(--text) 6%, transparent),
     transparent
   );
-  animation: skeleton-sweep 1.6s ease-in-out infinite;
+  animation: skeleton-sweep 1.8s ease-in-out infinite;
 }
-@keyframes skeleton-sweep {
-  100% { transform: translateX(100%); }
-}
+@keyframes skeleton-sweep { 100% { transform: translateX(100%); } }
 
-/* ---------------------------------------------------------- */
-/* Command palette backdrop blur                               */
-/* ---------------------------------------------------------- */
+/* ────────────────────────────────────────
+   Command palette backdrop
+───────────────────────────────────────── */
 .palette-backdrop {
-  backdrop-filter: blur(6px) saturate(1.1);
-  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
 }
 
-/* ---------------------------------------------------------- */
-/* Star / favorite toggle micro-interaction                    */
-/* ---------------------------------------------------------- */
+/* ────────────────────────────────────────
+   Star pop micro-animation
+───────────────────────────────────────── */
 @keyframes star-pop {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.35) rotate(-8deg); }
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.4) rotate(-10deg); }
   100% { transform: scale(1) rotate(0deg); }
 }
-.star-pop {
-  animation: star-pop 0.4s var(--ease-spring);
-}
+.star-pop { animation: star-pop 0.45s var(--ease-spring); }
 
-/* ---------------------------------------------------------- */
-/* Success burst — small radial pulse on completed actions     */
-/* ---------------------------------------------------------- */
+/* ────────────────────────────────────────
+   Success burst
+───────────────────────────────────────── */
 @keyframes success-burst {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 45%, transparent); }
-  100% { box-shadow: 0 0 0 14px color-mix(in srgb, var(--success) 0%, transparent); }
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 45%, transparent); }
+  100% { box-shadow: 0 0 0 16px color-mix(in srgb, var(--success) 0%, transparent); }
 }
-.success-burst {
-  animation: success-burst 0.7s var(--ease-out);
-}
+.success-burst { animation: success-burst 0.8s var(--ease-out); }
 
-/* ---------------------------------------------------------- */
-/* Marquee — used for the changelog / "what's new" strip       */
-/* ---------------------------------------------------------- */
+/* ────────────────────────────────────────
+   Marquee strip
+───────────────────────────────────────── */
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
 }
 .marquee-track {
-  animation: marquee-scroll 32s linear infinite;
+  animation: marquee-scroll 36s linear infinite;
+  will-change: transform;
 }
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-/* Fade the scrolling text out at both edges instead of a hard clip —
-   reads as an intentional ticker rather than content getting cut off. */
-.marquee-mask {
-  mask-image: linear-gradient(90deg, transparent 0, black 48px, black calc(100% - 48px), transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, black 48px, black calc(100% - 48px), transparent 100%);
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ────────────────────────────────────────
+   Press tactile feedback
+───────────────────────────────────────── */
+.press { transition: transform 0.15s var(--ease-out); }
+.press:active { transform: scale(0.95); }
+
+button:not(.press):not(:disabled) { transition: transform 0.15s var(--ease-out); }
+button:not(.press):not(:disabled):active { transform: scale(0.95); }
+
+/* ────────────────────────────────────────
+   Glass surface
+───────────────────────────────────────── */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid var(--glass-border);
 }
 
-/* ---------------------------------------------------------- */
-/* Section reveal — quiet scroll-in for section headers only   */
-/* ---------------------------------------------------------- */
-.press {
-  transition: transform 0.15s var(--ease-out);
-}
-.press:active {
-  transform: scale(0.96);
+/* ────────────────────────────────────────
+   Content visibility for performance
+───────────────────────────────────────── */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
 
-/* Global tactile press feedback for any plain <button> that hasn't already
-   opted into the .press utility (icon-only buttons, mode toggles, etc.) */
-button:not(.press):not(:disabled) {
-  transition: transform 0.15s var(--ease-out);
-}
-button:not(.press):not(:disabled):active {
-  transform: scale(0.96);
-}
-
-/* ---------------------------------------------------------- */
-/* Print styles — tool output should stay legible on paper     */
-/* ---------------------------------------------------------- */
-@media print {
-  .grid-texture,
-  .grain,
-  .mesh-glow,
-  aside,
-  nav,
-  header,
-  footer,
-  button,
-  a[href^="#"],
-  .no-print {
-    display: none !important;
-  }
-  html,
-  body {
-    background: #fff !important;
-    color: #111 !important;
-  }
-  main {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  * {
-    box-shadow: none !important;
-    border-color: #ccc !important;
+/* ────────────────────────────────────────
+   Mobile bottom bar spacing
+───────────────────────────────────────── */
+@media (max-width: 1023px) {
+  /* Push page content above fixed bottom bar (64px) + safe area */
+  .mobile-bottom-pad {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
 }
 
-/* Kbd key styling for shortcuts */
+/* ────────────────────────────────────────
+   Mobile bottom nav bar
+───────────────────────────────────────── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(60px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 50;
+}
+
+.bottom-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 500;
+  min-width: 60px;
+  text-align: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.bottom-bar-item:active { transform: scale(0.9); }
+.bottom-bar-item.active {
+  color: var(--accent-bright);
+}
+.bottom-bar-item .bar-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s var(--ease-out);
+}
+.bottom-bar-item.active .bar-icon {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+/* ────────────────────────────────────────
+   Kbd key
+───────────────────────────────────────── */
 kbd {
   font-family: var(--font-body);
   font-size: 11px;
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 5px;
   border: 1px solid var(--border);
   background: var(--bg-elevated);
   color: var(--text-dim);
   box-shadow: 0 1px 0 var(--border);
+}
+
+/* ────────────────────────────────────────
+   Gradient border card variant
+───────────────────────────────────────── */
+.card-gradient-border {
+  position: relative;
+  border-radius: 14px;
+}
+.card-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 50%, var(--accent-2) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card-gradient-border:hover::before { opacity: 1; }
+
+/* ────────────────────────────────────────
+   Scroll-driven fade-in (progressive)
+───────────────────────────────────────── */
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    animation: scroll-fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 25%;
+  }
+  @keyframes scroll-fade-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ────────────────────────────────────────
+   Print styles
+───────────────────────────────────────── */
+@media print {
+  .grid-texture, .grain, .mesh-glow, aside, nav, header, footer,
+  button, a[href^="#"], .no-print, .bottom-bar { display: none !important; }
+  html, body { background: #fff !important; color: #111 !important; }
+  main { margin: 0 !important; padding: 0 !important; }
+  * { box-shadow: none !important; border-color: #ccc !important; }
 }

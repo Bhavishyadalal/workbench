@@ -5,10 +5,16 @@ import { motion } from "framer-motion";
 import { UploadCloud, FileCheck2, X, Inbox, type LucideIcon } from "lucide-react";
 import { useSound } from "@/lib/hooks";
 
-export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function Card({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <div
-      className={`bg-[var(--bg-card)] border border-[var(--border)] rounded-lg p-5 sm:p-6 ${className}`}
+      className={`bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 sm:p-6 shadow-[var(--shadow-sm)] ${className}`}
     >
       {children}
     </div>
@@ -31,14 +37,18 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "tap-target press inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-all active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100";
-  const styles = {
-    primary: "bg-[var(--accent)] text-[var(--accent-ink)] hover:brightness-110",
+    "press inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 min-h-[44px]";
+
+  const styles: Record<string, string> = {
+    primary:
+      "btn-glow text-[var(--accent-ink)] relative overflow-hidden shadow-[var(--shadow-glow)]",
     secondary:
-      "bg-[var(--bg-elevated)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--accent)]",
-    ghost: "text-[var(--text-dim)] hover:text-[var(--text)]",
+      "bg-[var(--bg-elevated)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--accent-dim)] hover:text-[var(--accent-bright)] shadow-[var(--shadow-sm)]",
+    ghost: "text-[var(--text-dim)] hover:text-[var(--text)] hover:bg-[var(--bg-elevated)]",
   };
+
   const { click } = useSound();
+
   return (
     <button
       type={type}
@@ -48,6 +58,14 @@ export function Button({
       }}
       disabled={disabled}
       className={`${base} ${styles[variant]} ${className}`}
+      style={
+        variant === "primary"
+          ? {
+              background:
+                "linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 50%, var(--accent-2) 100%)",
+            }
+          : undefined
+      }
     >
       {children}
     </button>
@@ -63,14 +81,16 @@ export function Field({
 }) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-medium text-[var(--text-dim)]">{label}</span>
+      <span className="text-xs font-semibold text-[var(--text-dim)] tracking-wide uppercase">
+        {label}
+      </span>
       {children}
     </label>
   );
 }
 
 export const inputClass =
-  "w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-md px-3 py-2.5 text-sm text-[var(--text)] focus:border-[var(--accent)] transition-colors outline-none";
+  "w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-xl px-3.5 py-3 text-sm text-[var(--text)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/20 transition-all outline-none min-h-[44px]";
 
 export function Dropzone({
   onFiles,
@@ -121,10 +141,10 @@ export function Dropzone({
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
       }}
-      className={`relative flex flex-col items-center justify-center text-center rounded-lg border-2 border-dashed cursor-pointer transition-all duration-200 px-6 py-10 ${
+      className={`relative flex flex-col items-center justify-center text-center rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-200 px-6 py-12 sm:py-16 group ${
         dragOver
-          ? "border-[var(--accent)] bg-[var(--accent)]/5 scale-[1.01]"
-          : "border-[var(--border)] hover:border-[var(--accent-dim)]"
+          ? "border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_6%,var(--bg-card))] scale-[1.01]"
+          : "border-[var(--border)] hover:border-[var(--accent-dim)] hover:bg-[var(--bg-elevated)]"
       }`}
     >
       <input
@@ -137,13 +157,13 @@ export function Dropzone({
       />
       {hasFile ? (
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
+          initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 26 }}
-          className="flex items-center gap-2 text-[var(--text)]"
+          transition={{ type: "spring", stiffness: 420, damping: 26 }}
+          className="flex items-center gap-3 text-[var(--text)]"
         >
-          <FileCheck2 size={18} className="text-[var(--accent)]" />
-          <span className="text-sm font-medium">{label}</span>
+          <FileCheck2 size={22} className="text-[var(--success)] shrink-0" />
+          <span className="text-sm font-semibold">{label}</span>
           {onClear && (
             <button
               onClick={(e) => {
@@ -151,7 +171,7 @@ export function Dropzone({
                 onClear();
               }}
               aria-label="Clear file"
-              className="ml-1 p-1 rounded-full hover:bg-[var(--bg-elevated)] text-[var(--text-dim)]"
+              className="ml-1 p-1.5 rounded-lg hover:bg-[var(--bg-elevated)] text-[var(--text-dim)] hover:text-[var(--text)] transition-colors"
             >
               <X size={14} />
             </button>
@@ -160,24 +180,44 @@ export function Dropzone({
       ) : (
         <>
           <motion.div
-            animate={{ y: dragOver ? -3 : 0 }}
+            animate={{ y: dragOver ? -5 : 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="mb-4"
           >
-            <UploadCloud size={28} className="text-[var(--text-dim)] mb-3" />
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-1"
+              style={{
+                background:
+                  "color-mix(in srgb, var(--accent) 10%, var(--bg-elevated))",
+                border:
+                  "1px solid color-mix(in srgb, var(--accent) 20%, var(--border))",
+              }}
+            >
+              <UploadCloud
+                size={26}
+                className="text-[var(--accent)] group-hover:text-[var(--accent-bright)] transition-colors"
+              />
+            </div>
           </motion.div>
-          <p className="text-sm text-[var(--text)] font-medium">
-            Drop {multiple ? "files" : "a file"} here, or click to browse
+          <p className="text-sm font-semibold text-[var(--text)] mb-1">
+            Drop {multiple ? "files" : "a file"} here, or tap to browse
           </p>
-          {hint && <p className="text-xs text-[var(--text-dim)] mt-1">{hint}</p>}
+          {hint && (
+            <p className="text-xs text-[var(--text-dim)] mt-1">{hint}</p>
+          )}
         </>
       )}
     </div>
   );
 }
 
-const CONFETTI_COLORS = ["var(--accent)", "var(--accent-2)", "var(--success)", "var(--text)"];
+const CONFETTI_COLORS = [
+  "var(--accent)",
+  "var(--accent-2)",
+  "var(--success)",
+  "var(--accent-3)",
+];
 
-/** One-time particle burst layered on top of the success-burst glow. Fires once on mount. */
 function ConfettiBurst() {
   const [reduced, setReduced] = useState(false);
 
@@ -187,13 +227,14 @@ function ConfettiBurst() {
 
   const pieces = useMemo(
     () =>
-      Array.from({ length: 14 }, (_, i) => ({
+      Array.from({ length: 18 }, (_, i) => ({
         id: i,
-        dx: (Math.random() - 0.5) * 180,
-        dy: -(40 + Math.random() * 70),
-        rotate: (Math.random() - 0.5) * 360,
+        dx: (Math.random() - 0.5) * 220,
+        dy: -(50 + Math.random() * 90),
+        rotate: (Math.random() - 0.5) * 400,
         color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-        delay: Math.random() * 0.06,
+        delay: Math.random() * 0.08,
+        size: 4 + Math.random() * 4,
       })),
     []
   );
@@ -206,14 +247,14 @@ function ConfettiBurst() {
         <motion.span
           key={p.id}
           initial={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
-          animate={{ opacity: 0, x: p.dx, y: p.dy, rotate: p.rotate, scale: 0.5 }}
-          transition={{ duration: 0.75, delay: p.delay, ease: "easeOut" }}
+          animate={{ opacity: 0, x: p.dx, y: p.dy, rotate: p.rotate, scale: 0.4 }}
+          transition={{ duration: 0.85, delay: p.delay, ease: "easeOut" }}
           style={{
             position: "absolute",
-            left: "10%",
+            left: "50%",
             top: "0%",
-            width: 6,
-            height: 6,
+            width: p.size,
+            height: p.size,
             borderRadius: 2,
             background: p.color,
           }}
@@ -223,22 +264,27 @@ function ConfettiBurst() {
   );
 }
 
-export function ResultBar({ children, celebrate = false }: { children: ReactNode; celebrate?: boolean }) {
+export function ResultBar({
+  children,
+  celebrate = false,
+}: {
+  children: ReactNode;
+  celebrate?: boolean;
+}) {
   const { chime } = useSound();
 
   useEffect(() => {
     if (celebrate) chime();
-    // Fire once per mount (i.e. once per completed action) — chime is stable across renders.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [celebrate]);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 380, damping: 30 }}
       className={`relative flex flex-wrap items-center gap-3 mt-5 pt-5 border-t border-[var(--border)] ${
-        celebrate ? "success-burst rounded-lg" : ""
+        celebrate ? "success-burst rounded-xl" : ""
       }`}
     >
       {celebrate && <ConfettiBurst />}
@@ -247,12 +293,10 @@ export function ResultBar({ children, celebrate = false }: { children: ReactNode
   );
 }
 
-/** Shimmering placeholder block for async tool loading states. */
 export function Skeleton({ className = "" }: { className?: string }) {
   return <div className={`skeleton ${className}`} />;
 }
 
-/** Friendlier placeholder shown before the user has provided input, instead of a blank card. */
 export function EmptyState({
   icon: Icon = Inbox,
   title,
@@ -263,10 +307,18 @@ export function EmptyState({
   hint?: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center text-center px-6 py-10 text-[var(--text-dim)]">
-      <Icon size={26} className="mb-3 opacity-60" strokeWidth={1.5} />
-      <p className="text-sm font-medium text-[var(--text)]">{title}</p>
-      {hint && <p className="text-xs mt-1 max-w-xs">{hint}</p>}
+    <div className="flex flex-col items-center justify-center text-center px-6 py-14 text-[var(--text-dim)]">
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
+        style={{
+          background: "color-mix(in srgb, var(--accent) 8%, var(--bg-elevated))",
+          border: "1px solid color-mix(in srgb, var(--accent) 15%, var(--border))",
+        }}
+      >
+        <Icon size={24} className="text-[var(--accent)] opacity-70" strokeWidth={1.5} />
+      </div>
+      <p className="text-sm font-semibold text-[var(--text)] mb-1">{title}</p>
+      {hint && <p className="text-xs mt-1 max-w-xs leading-relaxed">{hint}</p>}
     </div>
   );
 }
