@@ -70,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <CommandPaletteProvider>
             <div className="flex min-h-screen relative" style={{ zIndex: 2 }}>
               <Sidebar />
-              <main className="flex-1 min-w-0 mobile-bottom-pad lg:!pb-0">
+              <main className="flex-1 min-w-0 mobile-bottom-pad pt-14 lg:pt-0">
                 <PageTransition>{children}</PageTransition>
               </main>
             </div>

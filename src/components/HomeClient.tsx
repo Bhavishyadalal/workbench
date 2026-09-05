@@ -369,7 +369,7 @@ export default function HomeClient() {
   return (
     <div>
       {/* ── Hero ── */}
-      <section className="relative px-4 sm:px-6 pt-14 pb-16 sm:pt-24 sm:pb-20 border-b border-[var(--border-soft)] overflow-hidden">
+      <section className="relative px-4 sm:px-6 pt-8 pb-12 sm:pt-16 sm:pb-20 border-b border-[var(--border-soft)] overflow-hidden">
         <div className="mesh-glow" aria-hidden />
         <div className="mesh-glow-3" aria-hidden />
 
@@ -400,7 +400,7 @@ export default function HomeClient() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: easeOut }}
-            className="text-[2.8rem] sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.03] max-w-3xl mb-6"
+            className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] max-w-3xl mb-6"
             style={{ fontFamily: "var(--font-display)" }}
           >
             One bench,{" "}

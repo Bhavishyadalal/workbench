@@ -5,11 +5,8 @@ import { usePathname } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Home,
   Search,
   Star,
-  Sun,
-  Moon,
   SquareSlash,
   Command,
   GripVertical,
@@ -20,7 +17,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { tools, categoryMeta, ToolCategory } from "@/lib/tools-registry";
-import { useFavorites, useTheme } from "@/lib/hooks";
+import { useFavorites } from "@/lib/hooks";
 import ThemeToggle from "@/components/ThemeToggle";
 import SoundToggle from "@/components/SoundToggle";
 import { usePalette } from "@/components/CommandPalette";
@@ -278,8 +275,12 @@ export default function Sidebar() {
         <NavContent />
       </aside>
 
-      {/* Mobile top bar — only shown on mobile (bottom bar handles navigation) */}
-      <div className="no-print lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] glass">
+      {/*
+        Mobile top bar — FIXED + full-width so it is completely removed from
+        the flex-row document flow. Sticky inside a flex row was causing it
+        to act as a flex child and steal horizontal space from <main>.
+      */}
+      <div className="no-print lg:hidden fixed top-0 left-0 right-0 w-full z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] glass">
         <Link href="/" className="flex items-center gap-2.5">
           <div
             className="corner-ticks w-7 h-7 flex items-center justify-center rounded-lg border border-[var(--accent-dim)] text-[var(--accent)]"
