@@ -7,6 +7,7 @@ import { CommandPaletteProvider } from "@/components/CommandPalette";
 import PageTransition from "@/components/PageTransition";
 import OpeningIntro from "@/components/OpeningIntro";
 import ParticleCanvas from "@/components/ParticleCanvas";
+import ClickSpark from "@/components/reactbits/ClickSpark";
 
 const title = "Workbench — Every tool you keep googling, in one place";
 const description =
@@ -75,14 +76,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="grain" />
         <ToastProvider>
           <CommandPaletteProvider>
-            <div className="flex min-h-screen relative" style={{ zIndex: 2 }}>
-              <Sidebar />
-              <main className="flex-1 min-w-0 mobile-bottom-pad pt-14 lg:pt-0">
-                <PageTransition>{children}</PageTransition>
-              </main>
-            </div>
-            {/* Mobile bottom tab bar — outside main so it layers above everything */}
-            <MobileBottomBar />
+            <ClickSpark
+              sparkColor="var(--accent, #a855f7)"
+              sparkSize={12}
+              sparkRadius={18}
+              sparkCount={8}
+              duration={400}
+            >
+              <div className="flex min-h-screen relative" style={{ zIndex: 2 }}>
+                <Sidebar />
+                <main className="flex-1 min-w-0 mobile-bottom-pad pt-14 lg:pt-0">
+                  <PageTransition>{children}</PageTransition>
+                </main>
+              </div>
+              {/* Mobile bottom tab bar — outside main so it layers above everything */}
+              <MobileBottomBar />
+            </ClickSpark>
           </CommandPaletteProvider>
         </ToastProvider>
       </body>

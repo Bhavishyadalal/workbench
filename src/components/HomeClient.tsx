@@ -34,11 +34,10 @@ import { useFavorites, useRecentTools } from "@/lib/hooks";
 import BackToTop from "@/components/BackToTop";
 import Tour from "@/components/Tour";
 import AIThemePicker from "@/components/AIThemePicker";
-import StarBorder from "@/components/react-bits/StarBorder";
-import ClickSpark from "@/components/react-bits/ClickSpark";
-import GlareHover from "@/components/react-bits/GlareHover";
-import ScrollFloat from "@/components/react-bits/ScrollFloat";
-import WarpText from "@/components/react-bits/WarpText";
+import StarBorder from "@/components/reactbits/StarBorder";
+import GlareHover from "@/components/reactbits/GlareHover";
+import ScrollFloat from "@/components/reactbits/ScrollFloat";
+import WarpText from "@/components/reactbits/WarpText";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
 
@@ -215,31 +214,38 @@ function StripCard({
 }) {
   return (
     <motion.div variants={item} className="shrink-0 w-[200px] sm:w-[220px]">
-      <Link
-        href={`/tools/${tool.slug}`}
-        className="group flex flex-col h-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 transition-all hover:border-[var(--accent-dim)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
+      <GlareHover
+        glareColor={accent}
+        glareOpacity={0.25}
+        borderRadius="0.75rem"
+        className="h-full"
       >
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{
-              background: `color-mix(in srgb, ${accent} 15%, var(--bg-elevated))`,
-            }}
-          >
-            <span
-              className="w-2 h-2 rounded-full"
-              style={{ background: accent }}
-            />
+        <Link
+          href={`/tools/${tool.slug}`}
+          className="group flex flex-col h-full w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 transition-all hover:border-[var(--accent-dim)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
+        >
+          <div className="flex items-start justify-between gap-2 mb-3">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{
+                background: `color-mix(in srgb, ${accent} 15%, var(--bg-elevated))`,
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{ background: accent }}
+              />
+            </div>
+            {badge}
           </div>
-          {badge}
-        </div>
-        <h3 className="text-sm font-semibold text-[var(--text)] leading-snug">
-          {tool.name}
-        </h3>
-        <p className="text-xs text-[var(--text-dim)] mt-1 line-clamp-2 leading-relaxed">
-          {tool.short}
-        </p>
-      </Link>
+          <h3 className="text-sm font-semibold text-[var(--text)] leading-snug">
+            {tool.name}
+          </h3>
+          <p className="text-xs text-[var(--text-dim)] mt-1 line-clamp-2 leading-relaxed">
+            {tool.short}
+          </p>
+        </Link>
+      </GlareHover>
     </motion.div>
   );
 }
@@ -379,14 +385,7 @@ export default function HomeClient() {
         <div className="mesh-glow" aria-hidden />
         <div className="mesh-glow-3" aria-hidden />
 
-        <ClickSpark
-          sparkColor="var(--accent)"
-          sparkSize={9}
-          sparkRadius={22}
-          sparkCount={7}
-          duration={450}
-          className="relative max-w-4xl mx-auto"
-        >
+        <div className="relative max-w-4xl mx-auto">
           {/* Floating AI badge & Quick Settings Row */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
             <motion.div
@@ -396,21 +395,20 @@ export default function HomeClient() {
               className="inline-flex items-center gap-2"
             >
               <StarBorder
-                as="div"
                 color="var(--accent)"
                 speed="4s"
-                thickness={1}
-                className="hero-badge-star"
+                thickness={1.5}
+                className="rounded-full shadow-[var(--shadow-sm)]"
+                innerClassName="px-3.5 py-1.5 rounded-full flex items-center gap-2"
                 backgroundColor="color-mix(in srgb, var(--accent) 12%, var(--bg-card))"
                 borderColor="color-mix(in srgb, var(--accent) 32%, var(--border))"
-                textColor="var(--accent-bright)"
               >
-                <span className="inline-flex items-center gap-2 text-xs font-semibold whitespace-nowrap">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
-                  </span>
-                  <Sparkles size={12} className="text-[var(--accent)]" />
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
+                </span>
+                <Sparkles size={12} className="text-[var(--accent)]" />
+                <span className="text-xs font-semibold text-[var(--accent-bright)]">
                   {tools.length} AI & Web Tools · 100% Local Execution
                 </span>
               </StarBorder>
@@ -430,29 +428,28 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* Headline */}
+          {/* Headline with interactive WarpText */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.08, ease: easeOut }}
-            className="max-w-3xl mb-6 -ml-1 sm:-ml-2"
+            className="relative mb-6 max-w-3xl"
           >
+            <h1 className="sr-only">One bench, every tool you keep re-googling.</h1>
             <WarpText
               text={"One bench, every tool\nyou keep re-googling."}
               color="var(--text)"
-              fontFamily="var(--font-display)"
-              fontWeight={700}
-              letterSpacing="-0.02em"
-              lineHeight={1.05}
-              warpStrength={0.06}
+              fontSize="clamp(2.4rem, 5.8vw, 4.4rem)"
+              fontWeight={800}
+              fontFamily="var(--font-display, inherit)"
+              warpStrength={0.065}
+              warpScale={1.6}
+              speed={0.45}
+              pointerInfluence={0.38}
               pointerStrength={0.32}
-              refraction={0.014}
-              fontSize="clamp(2.25rem, 6.2vw, 4.75rem)"
-              style={{
-                height: "clamp(140px, 22vw, 230px)",
-                marginLeft: "-0.15em",
-              }}
-              className="hero-warp-text"
+              refraction={0.016}
+              ripple={true}
+              style={{ minHeight: "180px", width: "100%" }}
             />
           </motion.div>
 
@@ -489,7 +486,7 @@ export default function HomeClient() {
               Works offline
             </div>
           </motion.div>
-        </ClickSpark>
+        </div>
       </section>
 
       {/* ── Changelog marquee ── */}
@@ -571,13 +568,12 @@ export default function HomeClient() {
             className="mb-10 max-w-lg"
           >
             <ScrollFloat
-              containerClassName="section-scroll-float mb-2"
-              textClassName="text-2xl sm:text-3xl font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-display)" }}
-              stagger={0.015}
-              animationDuration={0.6}
+              containerClassName="mb-2"
+              textClassName="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text)]"
+              animationDuration={1}
+              stagger={0.02}
             >
-              How “nothing uploaded” actually works
+              How "nothing uploaded" actually works
             </ScrollFloat>
             <p className="text-sm text-[var(--text-dim)]">
               Not a privacy promise — a technical fact you can verify yourself.
@@ -592,43 +588,85 @@ export default function HomeClient() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.1, ease: easeOut }}
-                className="glass rounded-2xl card-gradient-border relative overflow-hidden"
-                style={{ "--card-glow": step.color } as React.CSSProperties}
+                className="h-full"
               >
-                <GlareHover
-                  glareColor={step.color}
-                  glareOpacity={0.18}
-                  glareAngle={-30}
-                  glareSize={220}
-                  transitionDuration={700}
-                  className="trust-card-glare absolute inset-0"
-                />
-                <div className="relative p-6">
-                <div
-                  className="w-10 h-10 flex items-center justify-center rounded-xl mb-5 relative overflow-hidden"
-                  style={{
-                    background: `color-mix(in srgb, ${step.color} 12%, var(--bg-elevated))`,
-                    border: `1px solid color-mix(in srgb, ${step.color} 25%, var(--border))`,
-                  }}
-                >
-                  <step.icon size={18} style={{ color: step.color }} />
-                  <div
-                    className="absolute inset-0 rounded-xl animate-glow"
-                    style={{
-                      background: `radial-gradient(circle, color-mix(in srgb, ${step.color} 20%, transparent), transparent 70%)`,
-                    }}
-                  />
-                </div>
-                <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: step.color }}>
-                  Step {i + 1}
-                </p>
-                <h3 className="text-sm font-semibold text-[var(--text)] mb-2 leading-snug">
-                  {step.title}
-                </h3>
-                <p className="text-xs text-[var(--text-dim)] leading-relaxed">
-                  {step.body}
-                </p>
-                </div>
+                {i === 0 ? (
+                  <StarBorder
+                    color={step.color}
+                    speed="5s"
+                    thickness={1.5}
+                    className="rounded-2xl h-full shadow-[var(--shadow-sm)]"
+                    innerClassName="glass rounded-2xl p-6 h-full flex flex-col justify-between"
+                    backgroundColor="color-mix(in srgb, var(--bg-card) 95%, transparent)"
+                    borderColor="color-mix(in srgb, var(--accent) 30%, var(--border))"
+                  >
+                    <div>
+                      <div
+                        className="w-10 h-10 flex items-center justify-center rounded-xl mb-5 relative overflow-hidden"
+                        style={{
+                          background: `color-mix(in srgb, ${step.color} 12%, var(--bg-elevated))`,
+                          border: `1px solid color-mix(in srgb, ${step.color} 25%, var(--border))`,
+                        }}
+                      >
+                        <step.icon size={18} style={{ color: step.color }} />
+                        <div
+                          className="absolute inset-0 rounded-xl animate-glow"
+                          style={{
+                            background: `radial-gradient(circle, color-mix(in srgb, ${step.color} 20%, transparent), transparent 70%)`,
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: step.color }}>
+                        Step {i + 1} · Core Engine
+                      </p>
+                      <h3 className="text-sm font-semibold text-[var(--text)] mb-2 leading-snug">
+                        {step.title}
+                      </h3>
+                      <p className="text-xs text-[var(--text-dim)] leading-relaxed">
+                        {step.body}
+                      </p>
+                    </div>
+                  </StarBorder>
+                ) : (
+                  <GlareHover
+                    glareColor={step.color}
+                    glareOpacity={0.25}
+                    borderRadius="1rem"
+                    className="h-full"
+                  >
+                    <div
+                      className="glass rounded-2xl p-6 card-gradient-border h-full flex flex-col justify-between"
+                      style={{ "--card-glow": step.color } as React.CSSProperties}
+                    >
+                      <div>
+                        <div
+                          className="w-10 h-10 flex items-center justify-center rounded-xl mb-5 relative overflow-hidden"
+                          style={{
+                            background: `color-mix(in srgb, ${step.color} 12%, var(--bg-elevated))`,
+                            border: `1px solid color-mix(in srgb, ${step.color} 25%, var(--border))`,
+                          }}
+                        >
+                          <step.icon size={18} style={{ color: step.color }} />
+                          <div
+                            className="absolute inset-0 rounded-xl animate-glow"
+                            style={{
+                              background: `radial-gradient(circle, color-mix(in srgb, ${step.color} 20%, transparent), transparent 70%)`,
+                            }}
+                          />
+                        </div>
+                        <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: step.color }}>
+                          Step {i + 1}
+                        </p>
+                        <h3 className="text-sm font-semibold text-[var(--text)] mb-2 leading-snug">
+                          {step.title}
+                        </h3>
+                        <p className="text-xs text-[var(--text-dim)] leading-relaxed">
+                          {step.body}
+                        </p>
+                      </div>
+                    </div>
+                  </GlareHover>
+                )}
               </motion.div>
             ))}
           </div>
@@ -647,11 +685,9 @@ export default function HomeClient() {
             className="flex items-center justify-between gap-4 mb-4 flex-wrap"
           >
             <ScrollFloat
-              containerClassName="section-scroll-float"
-              textClassName="text-xl sm:text-2xl font-bold tracking-tight"
-              style={{ fontFamily: "var(--font-display)" }}
-              stagger={0.012}
-              animationDuration={0.5}
+              textClassName="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text)]"
+              animationDuration={0.8}
+              stagger={0.025}
             >
               Browse all tools
             </ScrollFloat>
