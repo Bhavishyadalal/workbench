@@ -111,9 +111,15 @@ All tokens live in `src/app/globals.css` as CSS custom properties on `:root`:
 --cat-text: #C994E8
 --cat-extras: #E8703D
 
---font-display: 'Fraunces', Georgia, serif   /* headlines, tool titles, stat numbers */
---font-body: 'Inter', system-ui, sans-serif  /* everything else */
+--font-display: var(--font-fraunces), Georgia, serif   /* headlines, tool titles, stat numbers */
+--font-body: var(--font-inter), system-ui, sans-serif   /* everything else */
 ```
+
+Fonts are self-hosted via `next/font/local` (see `src/app/layout.tsx` +
+`src/app/fonts/*.woff2`) — not a Google Fonts CDN `@import`. This removes an
+external network dependency from both build and runtime, eliminates a
+render-blocking request, and gives automatic fallback-font size-adjust to
+minimize layout shift while the real font loads.
 
 **Category colors are functional, not decorative** — they're read from
 `categoryMeta[cat].accent` in `tools-registry.ts` and used for the sidebar section
@@ -271,3 +277,46 @@ Each of these follows the existing tool-page pattern (registry entry + page file
 - No git repo or Vercel deployment was set up from within the assistant's sandbox
   (no network access to GitHub/Vercel from that environment) — the owner was handling
   push/deploy manually outside the session.
+
+---
+
+## 9. Performance & mobile hardening pass (done — read before re-doing this work)
+
+A follow-up pass addressed real, verified perf/mobile gaps rather than any
+visual redesign — the existing design system (section 4) was left intact
+since it was already strong. Changes made:
+
+- **Fonts**: migrated off a render-blocking `@import url()` to Google Fonts
+  in `globals.css` to self-hosted `next/font/local` (woff2 files in
+  `src/app/fonts/`). Zero external network dependency at build or runtime.
+- **iOS Safari input-zoom bug**: all text inputs were 14px (`text-sm`),
+  which makes iOS auto-zoom the viewport on focus. Fixed globally with one
+  rule in `globals.css` (`input, textarea, select { font-size: 16px }` at
+  `max-width: 768px`) rather than touching all 35 tool pages individually.
+- **Viewport/theme-color**: added the Next 15+ `viewport` export (was
+  missing entirely), including `viewport-fit=cover` and safe-area-inset
+  utilities (`.safe-top`/`.safe-bottom`) for notched phones, and a
+  `100svh` override on `.min-h-screen` so mobile browser chrome
+  show/hide doesn't cause layout jumps.
+- **Tap targets**: added a `.tap-target` utility (40×40px min, `pointer:
+  coarse` only) applied to icon-only controls that were under the
+  comfortable touch-target size — theme toggle, sound toggle, mobile menu
+  button, drawer close button. Deliberately *not* applied globally, since
+  several controls (favorite-star toggles in nav rows) are compact by
+  design and would break if forced to 40px.
+- **Web manifest**: added `public/manifest.webmanifest` + `appleWebApp`
+  metadata for "Add to Home Screen" support. Only references the existing
+  favicon.ico — no new icon assets were invented; add proper 192/512px PNG
+  icons to the manifest if/when those exist.
+- **`next.config.ts`**: added `compress`, `poweredByHeader: false`,
+  `optimizePackageImports` for `lucide-react`/`framer-motion`, and
+  `typescript.ignoreBuildErrors: false`.
+
+Verified: `npm run build` passes clean (39 routes), `npm run start` serves
+the homepage and a sample tool page with fonts/manifest/viewport all
+correctly wired in the rendered HTML.
+
+**Not done in this pass** (still open from section 6's backlog): the new
+tools (CSV↔JSON, background remover, minifier, etc.), keyboard shortcuts
+per-tool, and loading skeletons beyond currency/QR. Those are additive
+feature work, separate from this perf/mobile-focused pass.

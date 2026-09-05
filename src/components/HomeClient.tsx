@@ -230,14 +230,14 @@ export default function HomeClient() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08, ease: easeOut }}
-            className="text-[2.6rem] sm:text-6xl font-semibold tracking-tight leading-[1.05] max-w-2xl"
+            className="text-[2.6rem] sm:text-6xl font-semibold tracking-tight leading-[1.05] max-w-2xl break-words"
             style={{ fontFamily: "var(--font-display)" }}
           >
             One bench, every
             <br />
             <span className="text-gradient">tool you keep</span>
             <br />
-            re&#8209;googling.
+            re-googling.
           </motion.h1>
 
           <motion.p

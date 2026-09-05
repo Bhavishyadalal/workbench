@@ -232,7 +232,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile top bar */}
-      <div className="no-print lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
+      <div className="safe-top no-print lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="corner-ticks w-6 h-6 flex items-center justify-center border border-[var(--accent-dim)] text-[var(--accent)]">
             <SquareSlash size={13} strokeWidth={2} />
@@ -249,7 +249,7 @@ export default function Sidebar() {
           <button
             onClick={() => setOpen(true)}
             aria-label="Open menu"
-            className="p-2 -mr-1 text-[var(--text)]"
+            className="tap-target p-2 -mr-1 text-[var(--text)]"
           >
             <Menu size={22} />
           </button>
@@ -277,7 +277,7 @@ export default function Sidebar() {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
-                className="absolute right-3 top-4 p-2 text-[var(--text-dim)]"
+                className="tap-target absolute right-3 top-4 p-2 text-[var(--text-dim)]"
               >
                 <X size={20} />
               </button>
