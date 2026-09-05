@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -49,10 +49,9 @@
   --shadow-glow-2: 0 0 24px color-mix(in srgb, var(--accent-2) 25%, transparent);
 
   /* ── Fonts ── */
-  --font-display: 'Fraunces', Georgia, serif;
-  --font-brand: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Outfit', -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   /* ── Easing ── */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -100,6 +99,69 @@
 [data-theme="light"] .grain         { opacity: 0.015; }
 [data-theme="light"] .mesh-glow::before,
 [data-theme="light"] .mesh-glow::after { opacity: 0.08; }
+
+/* ── AI Theme Variations ── */
+[data-ai-theme="cyberpunk"] {
+  --accent: #00F0FF;
+  --accent-bright: #38BDF8;
+  --accent-dim: #0284C7;
+  --accent-2: #FF007F;
+  --accent-3: #A855F7;
+  --accent-ink: #040914;
+  --shadow-glow: 0 0 32px rgba(0, 240, 255, 0.4);
+  --shadow-glow-2: 0 0 32px rgba(255, 0, 127, 0.35);
+}
+
+[data-ai-theme="emerald"] {
+  --accent: #10B981;
+  --accent-bright: #34D399;
+  --accent-dim: #059669;
+  --accent-2: #84CC16;
+  --accent-3: #06B6D4;
+  --accent-ink: #02140D;
+  --shadow-glow: 0 0 32px rgba(16, 185, 129, 0.4);
+  --shadow-glow-2: 0 0 32px rgba(132, 204, 22, 0.35);
+}
+
+[data-ai-theme="solar"] {
+  --accent: #F59E0B;
+  --accent-bright: #FBBF24;
+  --accent-dim: #D97706;
+  --accent-2: #F43F5E;
+  --accent-3: #FB923C;
+  --accent-ink: #160C02;
+  --shadow-glow: 0 0 32px rgba(245, 158, 11, 0.4);
+  --shadow-glow-2: 0 0 32px rgba(244, 63, 94, 0.35);
+}
+
+[data-ai-theme="cosmic"] {
+  --accent: #A855F7;
+  --accent-bright: #C084FC;
+  --accent-dim: #7C3AED;
+  --accent-2: #EC4899;
+  --accent-3: #38BDF8;
+  --accent-ink: #0D0A1F;
+  --shadow-glow: 0 0 32px rgba(168, 85, 247, 0.4);
+  --shadow-glow-2: 0 0 32px rgba(236, 72, 153, 0.35);
+}
+
+/* ── Glowing AI keyframes & utilities ── */
+@keyframes radar-pulse {
+  0% { transform: scale(0.92); opacity: 0.9; }
+  50% { transform: scale(1.18); opacity: 0.2; }
+  100% { transform: scale(0.92); opacity: 0.9; }
+}
+.animate-radar { animation: radar-pulse 2.6s ease-in-out infinite; }
+
+@keyframes neon-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-shimmer {
+  background-size: 200% 200%;
+  animation: neon-shimmer 6s ease infinite;
+}
 
 /* ────────────────────────────────────────
    Reset & Base
@@ -584,275 +646,6 @@ kbd {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-}
-
-/* ────────────────────────────────────────
-   Intro splash
-───────────────────────────────────────── */
-.splash-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
-  overflow: hidden;
-}
-.splash-screen::before {
-  content: '';
-  position: absolute;
-  inset: -20%;
-  background:
-    radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%),
-    radial-gradient(circle at 75% 65%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent 55%);
-  filter: blur(60px);
-  animation: splash-drift 3.2s ease-in-out infinite;
-}
-@keyframes splash-drift {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50%      { transform: scale(1.15) rotate(8deg); }
-}
-@keyframes splash-ring {
-  0%   { transform: scale(0.6); opacity: 0.9; }
-  100% { transform: scale(2.6); opacity: 0; }
-}
-.splash-ring {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
-  animation: splash-ring 2.4s var(--ease-out) infinite;
-}
-@keyframes splash-letter-in {
-  0%   { opacity: 0; transform: translateY(0.5em) rotateX(-40deg); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0) rotateX(0deg); filter: blur(0); }
-}
-.splash-letter {
-  display: inline-block;
-  animation: splash-letter-in 0.7s var(--ease-spring) both;
-  transform-style: preserve-3d;
-}
-
-/* ────────────────────────────────────────
-   Cursor glow (desktop, follows pointer)
-───────────────────────────────────────── */
-.cursor-glow {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 480px;
-  height: 480px;
-  margin-left: -240px;
-  margin-top: -240px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
-  will-change: transform;
-  transition: opacity 0.4s ease;
-}
-
-/* ────────────────────────────────────────
-   Aurora backdrop (adds motion behind hero)
-───────────────────────────────────────── */
-.aurora {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.aurora span {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(80px);
-  opacity: 0.35;
-  animation: aurora-move 16s ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-[data-theme="light"] .aurora span { opacity: 0.18; mix-blend-mode: multiply; }
-.aurora span:nth-child(1) {
-  width: 40vw; height: 40vw; max-width: 480px; max-height: 480px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-3));
-  top: -10%; left: -5%;
-}
-.aurora span:nth-child(2) {
-  width: 35vw; height: 35vw; max-width: 420px; max-height: 420px;
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
-  top: 5%; right: -8%;
-  animation-delay: -6s;
-  animation-duration: 20s;
-}
-.aurora span:nth-child(3) {
-  width: 30vw; height: 30vw; max-width: 360px; max-height: 360px;
-  background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
-  bottom: -15%; left: 30%;
-  animation-delay: -11s;
-  animation-duration: 24s;
-}
-@keyframes aurora-move {
-  0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
-  25%      { transform: translate(6%, 8%) scale(1.15) rotate(15deg); }
-  50%      { transform: translate(-4%, 4%) scale(0.9) rotate(-10deg); }
-  75%      { transform: translate(3%, -6%) scale(1.05) rotate(8deg); }
-}
-
-/* ────────────────────────────────────────
-   Animated gradient text (shimmer sweep)
-───────────────────────────────────────── */
-.text-shimmer {
-  background: linear-gradient(
-    100deg,
-    var(--accent) 20%,
-    var(--accent-bright) 40%,
-    var(--accent-2) 50%,
-    var(--accent-bright) 60%,
-    var(--accent) 80%
-  );
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer-sweep 6s linear infinite;
-}
-@keyframes shimmer-sweep {
-  to { background-position: -250% center; }
-}
-
-/* ────────────────────────────────────────
-   Animated conic gradient border (premium card edge)
-───────────────────────────────────────── */
-@property --border-angle {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
-}
-.spin-border {
-  position: relative;
-  border-radius: inherit;
-}
-.spin-border::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: conic-gradient(from var(--border-angle), transparent 0%, var(--accent) 15%, transparent 30%, var(--accent-2) 55%, transparent 70%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: border-spin 5s linear infinite;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.spin-border:hover::before { opacity: 1; }
-@keyframes border-spin {
-  to { --border-angle: 360deg; }
-}
-@supports not (background: paint(x)) {
-  @keyframes border-spin { to { transform: rotate(360deg); } }
-}
-
-/* ────────────────────────────────────────
-   Magnetic button lift
-───────────────────────────────────────── */
-.btn-magnetic {
-  transition: transform 0.35s var(--ease-spring), box-shadow 0.35s var(--ease-out);
-  will-change: transform;
-}
-.btn-magnetic:hover {
-  box-shadow: var(--shadow-glow);
-}
-
-/* ────────────────────────────────────────
-   Shine sweep on hover (cards, buttons)
-───────────────────────────────────────── */
-.shine {
-  position: relative;
-  overflow: hidden;
-}
-.shine::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    color-mix(in srgb, var(--text) 12%, transparent),
-    transparent
-  );
-  transform: skewX(-20deg);
-  transition: left 0.7s var(--ease-out);
-  pointer-events: none;
-}
-.shine:hover::after { left: 130%; }
-
-/* ────────────────────────────────────────
-   Animated dotted underline draw
-───────────────────────────────────────── */
-@keyframes draw-line {
-  from { stroke-dashoffset: 240; }
-  to   { stroke-dashoffset: 0; }
-}
-.draw-line path {
-  stroke-dasharray: 240;
-  animation: draw-line 1.6s var(--ease-out) forwards;
-}
-
-/* ────────────────────────────────────────
-   Gradient ambient background pan (page-level, subtle, low-cost)
-───────────────────────────────────────── */
-@keyframes bg-pan {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-.bg-aurora-pan {
-  background: linear-gradient(120deg,
-    color-mix(in srgb, var(--accent) 6%, transparent),
-    transparent 30%,
-    color-mix(in srgb, var(--accent-2) 5%, transparent) 60%,
-    transparent 85%
-  );
-  background-size: 250% 250%;
-  animation: bg-pan 22s ease-in-out infinite;
-}
-
-/* ────────────────────────────────────────
-   Reveal-on-scroll (blur + rise), staggered via inline delay
-───────────────────────────────────────── */
-@keyframes reveal-up {
-  from { opacity: 0; transform: translateY(24px); filter: blur(6px); }
-  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
-/* ────────────────────────────────────────
-   Glow pulse ring (used behind logo / icons for "AI" feel)
-───────────────────────────────────────── */
-@keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
-  70%  { box-shadow: 0 0 0 10px color-mix(in srgb, var(--accent) 0%, transparent); }
-  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
-}
-.pulse-ring { animation: pulse-ring 2.4s ease-out infinite; }
-
-/* ────────────────────────────────────────
-   Reduced motion — disable heavier effects entirely
-───────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .cursor-glow, .aurora, .splash-screen { display: none !important; }
-  .text-shimmer { animation: none; background-position: 0 center; }
-  .spin-border::before { animation: none; }
-}
-
-/* Hide cursor glow on touch devices */
-@media (hover: none) {
-  .cursor-glow { display: none; }
 }
 
 /* ────────────────────────────────────────

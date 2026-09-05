@@ -118,6 +118,34 @@ export function useTheme() {
 
 export const THEME_STORAGE_KEY = THEME_KEY;
 
+export type AITheme = "cosmic" | "cyberpunk" | "emerald" | "solar";
+const AI_THEME_KEY = "wb:ai-theme";
+
+export const AI_THEMES: { id: AITheme; name: string; color: string; desc: string }[] = [
+  { id: "cosmic", name: "Cosmic Violet", color: "#A855F7", desc: "Default AI Nebula" },
+  { id: "cyberpunk", name: "Cyberpunk Neon", color: "#00F0FF", desc: "Hyper Cyan & Pink" },
+  { id: "emerald", name: "Matrix Neural", color: "#10B981", desc: "Deep Terminal Green" },
+  { id: "solar", name: "Solar Flare", color: "#F59E0B", desc: "Incandescent Amber" },
+];
+
+/** Manage active AI accent color theme with instant persistence. */
+export function useAITheme() {
+  const [aiTheme, setAiThemeState] = useState<AITheme>("cosmic");
+
+  useEffect(() => {
+    const current = (document.documentElement.getAttribute("data-ai-theme") as AITheme) || "cosmic";
+    setAiThemeState(current);
+  }, []);
+
+  const setAiTheme = useCallback((next: AITheme) => {
+    setAiThemeState(next);
+    document.documentElement.setAttribute("data-ai-theme", next);
+    writeJSON(AI_THEME_KEY, next);
+  }, []);
+
+  return { aiTheme, setAiTheme, themes: AI_THEMES };
+}
+
 /** Sound effects are OFF by default; persist the user's choice once they opt in. */
 export function useSoundPref() {
   const [enabled, setEnabled] = useState(false);

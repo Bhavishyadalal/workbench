@@ -33,6 +33,7 @@ import {
 import { useFavorites, useRecentTools } from "@/lib/hooks";
 import BackToTop from "@/components/BackToTop";
 import Tour from "@/components/Tour";
+import AIThemePicker from "@/components/AIThemePicker";
 
 const categories = Object.keys(categoryMeta) as ToolCategory[];
 
@@ -163,7 +164,7 @@ function ToolCard({
         ref={ref}
         href={`/tools/${tool.slug}`}
         onMouseMove={handleMove}
-        className="tool-card card-gradient-border spin-border group flex flex-col justify-between h-full bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5 min-h-[100px]"
+        className="tool-card card-gradient-border group flex flex-col justify-between h-full bg-[var(--bg-card)] border border-[var(--border)] p-4 sm:p-5 min-h-[100px]"
         style={{ "--card-glow": accent } as React.CSSProperties}
       >
         <div className="flex items-start justify-between gap-3 mb-2">
@@ -211,7 +212,7 @@ function StripCard({
     <motion.div variants={item} className="shrink-0 w-[200px] sm:w-[220px]">
       <Link
         href={`/tools/${tool.slug}`}
-        className="shine group flex flex-col h-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 transition-all hover:border-[var(--accent-dim)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
+        className="group flex flex-col h-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 transition-all hover:border-[var(--accent-dim)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)]"
       >
         <div className="flex items-start justify-between gap-2 mb-3">
           <div
@@ -372,33 +373,46 @@ export default function HomeClient() {
       <section className="relative px-4 sm:px-6 pt-8 pb-12 sm:pt-16 sm:pb-20 border-b border-[var(--border-soft)] overflow-hidden">
         <div className="mesh-glow" aria-hidden />
         <div className="mesh-glow-3" aria-hidden />
-        <div className="aurora" aria-hidden>
-          <span />
-          <span />
-          <span />
-        </div>
 
         <div className="relative max-w-4xl mx-auto">
-          {/* Floating badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5, ease: easeOut }}
-            className="inline-flex items-center gap-2 mb-8"
-          >
-            <span
-              className="shine inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border"
-              style={{
-                background: "color-mix(in srgb, var(--accent) 10%, var(--bg-card))",
-                borderColor: "color-mix(in srgb, var(--accent) 30%, var(--border))",
-                color: "var(--accent-bright)",
-              }}
+          {/* Floating AI badge & Quick Settings Row */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.5, ease: easeOut }}
+              className="inline-flex items-center gap-2"
             >
-              <span className="pulse-ring w-1.5 h-1.5 bg-[var(--accent)] rounded-full" />
-              <Zap size={11} className="inline" />
-              {tools.length} tools · runs locally · nothing uploaded
-            </span>
-          </motion.div>
+              <span
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border shadow-[var(--shadow-sm)]"
+                style={{
+                  background: "color-mix(in srgb, var(--accent) 12%, var(--bg-card))",
+                  borderColor: "color-mix(in srgb, var(--accent) 32%, var(--border))",
+                  color: "var(--accent-bright)",
+                }}
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]" />
+                </span>
+                <Sparkles size={12} className="text-[var(--accent)]" />
+                {tools.length} AI & Web Tools · 100% Local Execution
+              </span>
+            </motion.div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent("wb:replay-intro"))}
+                className="press inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] hover:border-[var(--accent)] text-xs font-semibold text-[var(--text-dim)] hover:text-[var(--accent-bright)] transition-all shadow-[var(--shadow-sm)]"
+                title="Replay Opening Animation"
+              >
+                <Sparkles size={12} className="text-[var(--accent)]" />
+                <span>Play Intro</span>
+              </button>
+              <AIThemePicker />
+            </div>
+          </div>
 
           {/* Headline */}
           <motion.h1
@@ -409,7 +423,7 @@ export default function HomeClient() {
             style={{ fontFamily: "var(--font-display)" }}
           >
             One bench,{" "}
-            <span className="text-shimmer">every tool</span>
+            <span className="text-gradient">every tool</span>
             <br />
             you keep re&#8209;googling.
           </motion.h1>
@@ -519,9 +533,8 @@ export default function HomeClient() {
       </ScrollRow>
 
       {/* ── How it works ── */}
-      <section className="relative px-4 sm:px-6 py-14 border-y border-[var(--border-soft)] cv-auto overflow-hidden" style={{ background: "color-mix(in srgb, var(--bg-elevated) 40%, var(--bg))" }}>
-        <div className="bg-aurora-pan absolute inset-0 pointer-events-none" aria-hidden />
-        <div className="relative max-w-5xl mx-auto">
+      <section className="px-4 sm:px-6 py-14 border-y border-[var(--border-soft)] cv-auto" style={{ background: "color-mix(in srgb, var(--bg-elevated) 40%, var(--bg))" }}>
+        <div className="max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -548,7 +561,7 @@ export default function HomeClient() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.45, delay: i * 0.1, ease: easeOut }}
-                className="glass rounded-2xl p-6 card-gradient-border spin-border"
+                className="glass rounded-2xl p-6 card-gradient-border"
                 style={{ "--card-glow": step.color } as React.CSSProperties}
               >
                 <div
@@ -664,7 +677,7 @@ export default function HomeClient() {
           <div className="flex items-center gap-2.5">
             <span
               className="text-sm font-semibold text-gradient"
-              style={{ fontFamily: "var(--font-brand)" }}
+              style={{ fontFamily: "var(--font-display)" }}
             >
               Workbench
             </span>
