@@ -2,7 +2,7 @@
 
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { UploadCloud, FileCheck2, X, Inbox, type LucideIcon } from "lucide-react";
+import { UploadCloud, FileCheck2, X, Inbox, Check, Copy, type LucideIcon } from "lucide-react";
 import { useSound } from "@/lib/hooks";
 
 export function Card({
@@ -319,6 +319,134 @@ export function EmptyState({
       </div>
       <p className="text-sm font-semibold text-[var(--text)] mb-1">{title}</p>
       {hint && <p className="text-xs mt-1 max-w-xs leading-relaxed">{hint}</p>}
+    </div>
+  );
+}
+
+export function Badge({
+  children,
+  variant = "default",
+  className = "",
+}: {
+  children: ReactNode;
+  variant?: "default" | "accent" | "success" | "warning" | "danger";
+  className?: string;
+}) {
+  const styles = {
+    default: "bg-[var(--bg-elevated)] text-[var(--text-dim)] border-[var(--border)]",
+    accent: "bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] text-[var(--accent-bright)] border-[color-mix(in_srgb,var(--accent)_30%,transparent)]",
+    success: "bg-[color-mix(in_srgb,var(--success)_12%,transparent)] text-[var(--success)] border-[color-mix(in_srgb,var(--success)_30%,transparent)]",
+    warning: "bg-[color-mix(in_srgb,var(--warn)_12%,transparent)] text-[var(--warn)] border-[color-mix(in_srgb,var(--warn)_30%,transparent)]",
+    danger: "bg-[color-mix(in_srgb,var(--danger)_12%,transparent)] text-[var(--danger)] border-[color-mix(in_srgb,var(--danger)_30%,transparent)]",
+  };
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${styles[variant]} ${className}`}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function CopyButton({
+  text,
+  label = "Copy",
+  copiedLabel = "Copied",
+  className = "",
+  variant = "ghost",
+}: {
+  text: string;
+  label?: string;
+  copiedLabel?: string;
+  className?: string;
+  variant?: "primary" | "secondary" | "ghost";
+}) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {}
+  };
+  return (
+    <Button
+      variant={variant}
+      onClick={copy}
+      disabled={!text}
+      className={`!px-3 !py-1.5 !min-h-[36px] text-xs font-medium ${className}`}
+    >
+      {copied ? <Check size={14} className="text-[var(--success)]" /> : <Copy size={14} />}
+      <span>{copied ? copiedLabel : label}</span>
+    </Button>
+  );
+}
+
+export function Tabs<T extends string>({
+  options,
+  value,
+  onChange,
+  className = "",
+}: {
+  options: { value: T; label: ReactNode; icon?: LucideIcon }[];
+  value: T;
+  onChange: (v: T) => void;
+  className?: string;
+}) {
+  return (
+    <div className={`flex flex-wrap gap-1.5 p-1 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-xl ${className}`}>
+      {options.map((opt) => {
+        const active = opt.value === value;
+        const Icon = opt.icon;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => onChange(opt.value)}
+            className={`press flex-1 min-w-[72px] py-2 px-3 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center justify-center gap-1.5 ${
+              active
+                ? "bg-[var(--bg-card)] text-[var(--accent-bright)] shadow-[var(--shadow-sm)] border border-[color-mix(in_srgb,var(--accent)_25%,var(--border))]"
+                : "text-[var(--text-dim)] hover:text-[var(--text)] border border-transparent"
+            }`}
+          >
+            {Icon && <Icon size={14} className={active ? "text-[var(--accent)]" : "opacity-70"} />}
+            <span>{opt.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export function ProgressBar({
+  progress,
+  label,
+  className = "",
+}: {
+  progress: number;
+  label?: string;
+  className?: string;
+}) {
+  const pct = Math.max(0, Math.min(100, progress));
+  return (
+    <div className={`w-full ${className}`}>
+      {label && (
+        <div className="flex justify-between items-center text-xs font-medium text-[var(--text-dim)] mb-1.5">
+          <span>{label}</span>
+          <span className="font-mono text-[var(--accent)]">{pct.toFixed(0)}%</span>
+        </div>
+      )}
+      <div className="h-2 w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-full overflow-hidden">
+        <motion.div
+          className="h-full rounded-full"
+          style={{
+            background: "linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%)",
+          }}
+          animate={{ width: `${pct}%` }}
+          transition={{ ease: "easeOut", duration: 0.25 }}
+        />
+      </div>
     </div>
   );
 }

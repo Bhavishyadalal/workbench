@@ -10,7 +10,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, Info, TriangleAlert } from "lucide-react";
 
-type ToastKind = "success" | "info" | "warn";
+type ToastKind = "success" | "info" | "warn" | "error";
 
 interface ToastItem {
   id: number;
@@ -30,12 +30,14 @@ const icons: Record<ToastKind, typeof CheckCircle2> = {
   success: CheckCircle2,
   info: Info,
   warn: TriangleAlert,
+  error: TriangleAlert,
 };
 
 const iconColor: Record<ToastKind, string> = {
   success: "var(--success)",
   info: "var(--accent)",
-  warn: "var(--danger)",
+  warn: "var(--warn)",
+  error: "var(--danger)",
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
