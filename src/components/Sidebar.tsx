@@ -276,6 +276,7 @@ export default function Sidebar() {
     <>
       {/* Desktop sidebar — full permanent nav, ≥1024px */}
       <aside className="hidden lg:flex flex-col w-[260px] shrink-0 h-screen sticky top-0 border-r border-[var(--border)] bg-[var(--bg)]">
+<<<<<<< HEAD
         <div className="flex items-center justify-between px-5 pt-6 pb-4 shrink-0">
           <Link href="/" className="group">
             <div className="transition-transform duration-300 group-hover:scale-105">
@@ -286,6 +287,33 @@ export default function Sidebar() {
             <ThemeToggle />
             <SoundToggle />
           </div>
+=======
+        <NavContent />
+      </aside>
+
+      {/* Mobile top bar */}
+      <div className="safe-top no-print lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="corner-ticks w-6 h-6 flex items-center justify-center border border-[var(--accent-dim)] text-[var(--accent)]">
+            <SquareSlash size={13} strokeWidth={2} />
+          </div>
+          <span className="font-semibold text-base" style={{ fontFamily: "var(--font-display)" }}>
+            Workbench
+          </span>
+        </Link>
+        <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" data-tour="theme">
+            <ThemeToggle />
+            <SoundToggle />
+          </div>
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            className="tap-target p-2 -mr-1 text-[var(--text)]"
+          >
+            <Menu size={22} />
+          </button>
+>>>>>>> a46212d85ec06ecaf0a74e627b8f1da58d307ca4
         </div>
         <div className="px-4 pb-3 shrink-0">
           <PaletteTrigger />
@@ -328,9 +356,37 @@ export default function Sidebar() {
       {/* Shared slide-in nav panel for every sub-1024px width */}
       <AnimatePresence>
         {open && (
+<<<<<<< HEAD
           <div className="lg:hidden">
             <NavPanel onClose={() => setOpen(false)} />
           </div>
+=======
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/60 z-50"
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 340, damping: 34 }}
+              className="lg:hidden fixed left-0 top-0 h-full w-[85%] max-w-[320px] bg-[var(--bg)] border-r border-[var(--border)] z-50 flex flex-col"
+            >
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="Close menu"
+                className="tap-target absolute right-3 top-4 p-2 text-[var(--text-dim)]"
+              >
+                <X size={20} />
+              </button>
+              <NavContent onNavigate={() => setOpen(false)} />
+            </motion.aside>
+          </>
+>>>>>>> a46212d85ec06ecaf0a74e627b8f1da58d307ca4
         )}
       </AnimatePresence>
     </>
